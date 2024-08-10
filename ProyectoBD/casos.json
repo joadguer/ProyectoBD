@@ -1,13 +1,1 @@
-[
-    {
-        "id": 1,
-        "cliente": 1,
-        "descripcion": "ddsd",
-        "etapa": "dsdsd",
-        "estado": "sdsds",
-        "fechaInicio": "dsdsd",
-        "fechaFin": "sdsds",
-        "abogado": 1,
-        "contrato": 1
-    }
-]
+[]
