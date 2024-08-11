@@ -9,6 +9,7 @@ CASOS_FILE = "casos.json"
 ABOGADOS_FILE = "abogados.json"
 CONTRATOS_FILE = "contratos.json"
 
+
 # Función para cargar los datos de los clientes desde un archivo JSON
 def cargar_clientes():
     if os.path.exists(CLIENTES_FILE):
@@ -87,6 +88,8 @@ nuevo_cliente = None
 nuevo_abogado = None
 nuevo_contrato = None
 
+
+
 # Función para verificar el inicio de sesión
 def verificar_login():
     usuario = entry_usuario.get()
@@ -113,12 +116,13 @@ def mostrar_casos():
             caso["id"], 
             cliente_nombre, 
             caso["descripcion"], 
-            caso["etapa"], 
+            caso.get("etapa",""),
             caso["estado"], 
             abogado_nombre,
             caso.get("fechaInicio", ""),
             caso.get("fechaFin", ""),
-            contrato["id"]
+            contrato["id"],
+            
         ))
 
 # Función para agregar un caso
@@ -130,20 +134,20 @@ def agregar_caso():
         if nuevo_abogado is None:
             messagebox.showerror("Error", "Debe agregar un abogado antes de guardar el caso")
             return
-        if nuevo_contrato is None:
-            messagebox.showerror("Error","Debe agregar un contrato antes de guardar el caso")
+        if nuevo_contrato is None:  
+            messagebox.showerror("Error", "Debe agregar un contrato antes de guardar el caso")
         
         nuevo_caso = {
             "id": obtener_siguiente_id(casos),
             "cliente": nuevo_cliente["id"],
             "descripcion": entry_descripcion.get(),
-            "etapa": entry_etapa.get(),
             "estado": entry_estado.get(),
             "fechaInicio": entry_fechaInicio.get(),
             "fechaFin": entry_fechaFin.get(),
             "abogado": nuevo_abogado["id"],
-            "contrato":nuevo_contrato["id"]
-
+            "contrato":nuevo_contrato["id"],
+            "area": combobox_area.get(),
+            "etapa":combobox_etapa.get()
         }
         
         casos.append(nuevo_caso)
@@ -197,9 +201,20 @@ def agregar_caso():
             entry_area_enfoque.pack()
             
             tk.Button(agregar_abogado_window, text="Guardar Abogado", command=guardar_abogado).pack(pady=20)
-
+    
+    areas_y_etapas = {
+        "Penal": ["Investigación", "Juicio", "Apelación"],
+        "Infancia": ["Audiencia", "Custodia", "Mediación"],
+        "Civil": ["Demanda", "Audiencia Preliminar", "Juicio"],
+        "Laboral": ["Conciliación", "Juicio", "Sentencia"],
+        "Tributario": ["Notificación", "Audiencia", "Resolución"]
+        }
+    
     def agregar_contrato():
+        
         global nuevo_contrato
+
+        
 
         # Solo permite guardar el contrato después de completar los campos
         def guardar_contrato():
@@ -224,14 +239,11 @@ def agregar_caso():
         tk.Label(agregar_contrato_window, text="Descripcion:").pack(pady=5)
         entry_descripcion_contrato = tk.Entry(agregar_contrato_window)
         entry_descripcion_contrato.pack()
-
+    
 
         tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
         entry_fecha_contrato = tk.Entry(agregar_contrato_window)
         entry_fecha_contrato.pack()
-
-
-
 
         tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
 
@@ -339,18 +351,31 @@ def agregar_caso():
         mostrar_campos_cliente()
         
         tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)
-    
-    
+
+
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
+
+    def actualizar_etapas(event):
+        area_seleccionada = combobox_area.get()
+        etapas = areas_y_etapas.get(area_seleccionada, [])
+        combobox_etapa['values'] = etapas
+        combobox_etapa.current(0)
+
+    tk.Label(agregar_caso_window, text="Área:").pack(pady=5)
+    opciones_area = list(areas_y_etapas.keys())
+    combobox_area = ttk.Combobox(agregar_caso_window, values=opciones_area, state="readonly")
+    combobox_area.pack()
+    combobox_area.bind("<<ComboboxSelected>>", actualizar_etapas)
+
+    tk.Label(agregar_caso_window, text="Etapa:").pack(pady=5)
+    combobox_etapa = ttk.Combobox(agregar_caso_window, state="readonly")
+    combobox_etapa.pack()
     
     tk.Label(agregar_caso_window, text="Descripción:").pack(pady=5)
     entry_descripcion = tk.Entry(agregar_caso_window)
     entry_descripcion.pack()
-    
-    tk.Label(agregar_caso_window, text="Etapa:").pack(pady=5)
-    entry_etapa = tk.Entry(agregar_caso_window)
-    entry_etapa.pack()
+
     
     tk.Label(agregar_caso_window, text="Estado:").pack(pady=5)
     entry_estado = tk.Entry(agregar_caso_window)
@@ -364,12 +389,10 @@ def agregar_caso():
     entry_fechaFin = tk.Entry(agregar_caso_window)
     entry_fechaFin.pack()
 
-
     tk.Button(agregar_caso_window, text="Agregar Cliente", command=agregar_cliente).pack(pady=10)
     tk.Button(agregar_caso_window, text="Agregar Abogado", command=agregar_abogado).pack(pady=10)
     tk.Button(agregar_caso_window, text="Agregar Contrato", command= agregar_contrato).pack(pady=10)
     tk.Button(agregar_caso_window, text="Guardar Caso", command=guardar_caso).pack(pady=20)
-
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -413,9 +436,9 @@ tabla_casos.column("descripcion", width=150)
 tabla_casos.column("etapa", width=100)
 tabla_casos.column("estado", width=100)
 tabla_casos.column("abogado", width=100)
-tabla_casos.column("fechaInicio", width=100)
-tabla_casos.column("fechaFin", width=100)
-tabla_casos.column("contrato", width=100)
+tabla_casos.column("fechaInicio", width=50)
+tabla_casos.column("fechaFin", width=50)
+tabla_casos.column("contrato", width=50)
 
 tabla_casos.pack(fill="both", expand=True, pady=20)
 
