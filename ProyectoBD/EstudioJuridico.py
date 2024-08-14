@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import json
 import os
+from tkcalendar import DateEntry
 
 # Definir archivos para guardar los datos
 CLIENTES_FILE = "clientes.json"
@@ -140,8 +141,8 @@ def agregar_caso():
         nuevo_caso = {
             "id": obtener_siguiente_id(casos),
             "cliente": nuevo_cliente["id"],
-            "descripcion": entry_descripcion.get(),
-            "estado": entry_estado.get(),
+            "descripcion": entry_descripcion.get("1.0", tk.END).strip(),
+            "estado": estado_var.get(),
             "fechaInicio": entry_fechaInicio.get(),
             "fechaFin": entry_fechaFin.get(),
             "abogado": nuevo_abogado["id"],
@@ -193,8 +194,10 @@ def agregar_caso():
             entry_apellido_materno_abogado.pack()
             
             tk.Label(agregar_abogado_window, text="Fecha de Nacimiento:").pack(pady=5)
-            entry_fecha_nacimiento_abogado = tk.Entry(agregar_abogado_window)
+            entry_fecha_nacimiento_abogado = DateEntry(agregar_abogado_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                            foreground='black', borderwidth=2)
             entry_fecha_nacimiento_abogado.pack()
+    
             
             tk.Label(agregar_abogado_window, text="Área de Enfoque:").pack(pady=5)
             entry_area_enfoque = tk.Entry(agregar_abogado_window)
@@ -242,7 +245,8 @@ def agregar_caso():
     
 
         tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
-        entry_fecha_contrato = tk.Entry(agregar_contrato_window)
+        entry_fecha_contrato = DateEntry(agregar_contrato_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                            foreground='black', borderwidth=2)
         entry_fecha_contrato.pack()
 
         tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
@@ -304,7 +308,8 @@ def agregar_caso():
         entry_apellido_materno.pack()
         
         tk.Label(agregar_cliente_window, text="Fecha de Nacimiento:").pack(pady=5)
-        entry_fecha_nacimiento = tk.Entry(agregar_cliente_window)
+        entry_fecha_nacimiento = DateEntry(agregar_cliente_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                            foreground='black', borderwidth=2)
         entry_fecha_nacimiento.pack()
         
         tk.Label(agregar_cliente_window, text="Teléfono:").pack(pady=5)
@@ -371,28 +376,63 @@ def agregar_caso():
     tk.Label(agregar_caso_window, text="Etapa:").pack(pady=5)
     combobox_etapa = ttk.Combobox(agregar_caso_window, state="readonly")
     combobox_etapa.pack()
-    
-    tk.Label(agregar_caso_window, text="Descripción:").pack(pady=5)
-    entry_descripcion = tk.Entry(agregar_caso_window)
-    entry_descripcion.pack()
 
     
     tk.Label(agregar_caso_window, text="Estado:").pack(pady=5)
-    entry_estado = tk.Entry(agregar_caso_window)
-    entry_estado.pack()
+    estado_var = tk.StringVar()
+
+    frame_estado = tk.Frame(agregar_caso_window)
+    frame_estado.pack(pady=5)
+
+    opciones_estado = [
+        ("Inicio", "green"),
+        ("En proceso", "yellow"),
+        ("Finalizado", "red")
+    ]
+    
+    for texto, color in opciones_estado:
+        frame_opcion = tk.Frame(frame_estado)
+        frame_opcion.pack(anchor='w')
+        
+        canvas = tk.Canvas(frame_opcion, width=20, height=20, highlightthickness=0)
+        canvas.create_oval(2, 2, 18, 18, fill=color, outline=color)
+        canvas.pack(side='left')
+        
+        radio_btn = tk.Radiobutton(frame_opcion, text=texto, variable=estado_var, value=texto)
+        radio_btn.pack(side='left')
 
     tk.Label(agregar_caso_window, text="Fecha Inicio:").pack(pady=5)
-    entry_fechaInicio = tk.Entry(agregar_caso_window)
-    entry_fechaInicio.pack()
+    entry_fechaInicio= DateEntry(agregar_caso_window, date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                            foreground='black', borderwidth=2)
+    entry_fechaInicio.pack(pady=5)
 
     tk.Label(agregar_caso_window, text="Fecha Fin:").pack(pady=5)
-    entry_fechaFin = tk.Entry(agregar_caso_window)
-    entry_fechaFin.pack()
+    entry_fechaFin = DateEntry(agregar_caso_window, date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                         foreground='white', borderwidth=2)
+    entry_fechaFin.pack(pady=5)
 
-    tk.Button(agregar_caso_window, text="Agregar Cliente", command=agregar_cliente).pack(pady=10)
-    tk.Button(agregar_caso_window, text="Agregar Abogado", command=agregar_abogado).pack(pady=10)
-    tk.Button(agregar_caso_window, text="Agregar Contrato", command= agregar_contrato).pack(pady=10)
-    tk.Button(agregar_caso_window, text="Guardar Caso", command=guardar_caso).pack(pady=20)
+    def limitarcaract(event):
+        if len(entry_descripcion.get("1.0", tk.END)) > 150:
+            entry_descripcion.delete("1.150", tk.END)
+        
+    tk.Label(agregar_caso_window, text="Descripción:").pack(pady=5)
+    entry_descripcion = tk.Text(agregar_caso_window, width=50, height=10)
+    entry_descripcion.pack()
+    entry_descripcion.bind("<KeyRelease>", limitarcaract)
+
+    botones_frame = tk.Frame(agregar_caso_window)
+    botones_frame.pack(pady=20)
+
+    btn_agregar_cliente = tk.Button(botones_frame, text="Agregar Cliente", command=agregar_cliente)
+    btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado", command=agregar_abogado)
+    btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato", command=agregar_contrato)
+    btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso", command=guardar_caso)
+
+    btn_agregar_cliente.grid(row=0, column=0, padx=10)
+    btn_agregar_abogado.grid(row=0, column=1, padx=10)
+    btn_agregar_contrato.grid(row=0, column=2, padx=10)
+    btn_guardar_caso.grid(row=0, column=3, padx=10)
+
 
 # Crear la ventana principal
 root = tk.Tk()
