@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import json
 import os
+from tkinter import filedialog
 from tkcalendar import DateEntry
 
 # Definir archivos para guardar los datos
@@ -9,6 +10,7 @@ CLIENTES_FILE = "clientes.json"
 CASOS_FILE = "casos.json"
 ABOGADOS_FILE = "abogados.json"
 CONTRATOS_FILE = "contratos.json"
+PAGOS_FILE = "pagos.json"
 
 
 # Función para cargar los datos de los clientes desde un archivo JSON
@@ -72,11 +74,29 @@ def guardar_contratos():
     with open(CONTRATOS_FILE, "w") as file:
         json.dump(contratos,file, indent=4)
 
+
+
+def cargar_pagos():
+    if os.path.exists(PAGOS_FILE):
+        try:
+            with open(PAGOS_FILE, "r") as file:
+                return json.load(file)
+        except json.JSONDecodeError:
+            return []
+    return []
+
+
+def guardar_pagos():
+    with open(PAGOS_FILE, "w") as file:
+        json.dump(pagos,file, indent=4)
+
+
 # Cargar los datos de clientes, casos, abogados y contratos al iniciar la aplicación
-clientes = cargar_clientes()
+clientes = cargar_clientes() 
 casos = cargar_casos()
 abogados = cargar_abogados()
 contratos = cargar_contratos()
+pagos = cargar_pagos() or []
 
 # Obtener el siguiente ID disponible para clientes, casos y abogados
 def obtener_siguiente_id(lista):
@@ -88,8 +108,7 @@ def obtener_siguiente_id(lista):
 nuevo_cliente = None
 nuevo_abogado = None
 nuevo_contrato = None
-
-
+nuevo_pago = None
 
 # Función para verificar el inicio de sesión
 def verificar_login():
@@ -148,7 +167,8 @@ def agregar_caso():
             "abogado": nuevo_abogado["id"],
             "contrato":nuevo_contrato["id"],
             "area": combobox_area.get(),
-            "etapa":combobox_etapa.get()
+            "etapa":combobox_etapa.get(),
+            "pago":nuevo_pago["id"]
         }
         
         casos.append(nuevo_caso)
@@ -213,19 +233,67 @@ def agregar_caso():
         "Tributario": ["Notificación", "Audiencia", "Resolución"]
         }
     
+    def agregar_pago():
+
+        global nuevo_pago
+
+        def guardar_pago():
+            global nuevo_pago
+            nuevo_pago = {
+            "id": obtener_siguiente_id(pagos),
+            "monto": entry_monto_pago.get(),
+            "fecha": entry_fecha_pago.get(),
+            "metodo_pago": entry_metodo_pago.get(),
+            "descripcion": entry_descripcion_pago.get("1.0", tk.END).strip(),
+        }
+        pagos.append(nuevo_pago)
+        guardar_pago()
+        agregar_pago_window.destroy()
+
+        agregar_pago_window = tk.Toplevel()
+        agregar_pago_window.title("Agregar Pago")
+        tk.Label(agregar_pago_window, text="Monto:").pack(pady=5)
+        entry_monto_pago = tk.Entry(agregar_pago_window)
+        entry_monto_pago.pack()
+
+        tk.Label(agregar_pago_window, text="Fecha:").pack(pady=5)
+        entry_fecha_pago = DateEntry(agregar_pago_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
+                                    foreground='black', borderwidth=2)
+        entry_fecha_pago.pack()
+
+        tk.Label(agregar_pago_window, text="Método de Pago:").pack(pady=5)
+        entry_metodo_pago = tk.Entry(agregar_pago_window)
+        entry_metodo_pago.pack()
+
+        tk.Label(agregar_pago_window, text="Descripción:").pack(pady=5)
+        entry_descripcion_pago = tk.Text(agregar_pago_window, width=50, height=10)
+        entry_descripcion_pago.pack()
+
+        tk.Button(agregar_pago_window, text="Guardar Pago", command=guardar_pago).pack(pady=20)
+
+ 
     def agregar_contrato():
         
-        global nuevo_contrato
+        global nuevo_contrato,pdf_contenido
 
-        
+        def subir_pdf():
+            file_path = filedialog.askopenfilename(
+                title="Seleccionar PDF del contrato",
+                filetypes=[("Archivos PDF", "*.pdf")]
+            )
+            if file_path:
+                entry_pdf.config(text=file_path)
+                with open(file_path,"rb") as file:
+                    pdf_contenido = file.read()
 
         # Solo permite guardar el contrato después de completar los campos
         def guardar_contrato():
+             
             global nuevo_contrato
             nuevo_contrato = {
                 "id": obtener_siguiente_id(contratos),
-                "Estado": entry_estado_contrato.get(),
-                "Descripcion": entry_descripcion_contrato.get(),
+                "PDF": pdf_contenido,
+                "Descripcion": entry_descripcion_contrato.get("1.0", tk.END).strip(),
                 "Fecha": entry_fecha_contrato.get(),
             }
             contratos.append(nuevo_contrato)
@@ -235,20 +303,26 @@ def agregar_caso():
         agregar_contrato_window = tk.Toplevel(agregar_caso_window)
         agregar_contrato_window.title("Agregar Contrato")
 
-        tk.Label(agregar_contrato_window, text="Estado:").pack(pady=5)
-        entry_estado_contrato = tk.Entry(agregar_contrato_window)
-        entry_estado_contrato.pack()
-
+        
+        tk.Button(agregar_contrato_window, text="Subir PDF", command=subir_pdf).pack(pady=5)
+        entry_pdf = tk.Label(agregar_contrato_window, text="")
+        entry_pdf.pack(pady=5)
+        
+        def limitarcaract(event):
+            if len(entry_descripcion_contrato.get("1.0",tk.END))>150:
+                entry_descripcion_contrato.delete("1.150",tk.END)
+        
         tk.Label(agregar_contrato_window, text="Descripcion:").pack(pady=5)
-        entry_descripcion_contrato = tk.Entry(agregar_contrato_window)
+        entry_descripcion_contrato = tk.Text(agregar_contrato_window,width=50,height=10)
         entry_descripcion_contrato.pack()
+        entry_descripcion_contrato.bind("<KeyRelease>", limitarcaract)
     
-
         tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
         entry_fecha_contrato = DateEntry(agregar_contrato_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
                             foreground='black', borderwidth=2)
         entry_fecha_contrato.pack()
 
+        
         tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
 
     def agregar_cliente():
@@ -426,12 +500,14 @@ def agregar_caso():
     btn_agregar_cliente = tk.Button(botones_frame, text="Agregar Cliente", command=agregar_cliente)
     btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado", command=agregar_abogado)
     btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato", command=agregar_contrato)
+    btn_agregar_pago = tk.Button(botones_frame,text = "Agregar Pago",command=agregar_pago)
     btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso", command=guardar_caso)
 
     btn_agregar_cliente.grid(row=0, column=0, padx=10)
     btn_agregar_abogado.grid(row=0, column=1, padx=10)
     btn_agregar_contrato.grid(row=0, column=2, padx=10)
-    btn_guardar_caso.grid(row=0, column=3, padx=10)
+    btn_agregar_pago.grid(row=0,column=3,padx=10)
+    btn_guardar_caso.grid(row=0, column=4, padx=10)
 
 
 # Crear la ventana principal
