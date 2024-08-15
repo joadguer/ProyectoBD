@@ -98,11 +98,14 @@ abogados = cargar_abogados()
 contratos = cargar_contratos()
 pagos = cargar_pagos() or []
 
-# Obtener el siguiente ID disponible para clientes, casos y abogados
 def obtener_siguiente_id(lista):
     if lista:
-        return max(item["id"] for item in lista) + 1
+        # Filtrar elementos None y aquellos que no contienen 'id'
+        ids = [item["id"] for item in lista if item is not None and "id" in item]
+        if ids:
+            return max(ids) + 1
     return 1
+
 
 # Variable global para almacenar el cliente y el abogado seleccionados
 nuevo_cliente = None
@@ -130,8 +133,10 @@ def mostrar_casos():
         cliente = next((c for c in clientes if c["id"] == caso["cliente"]), {})
         abogado = next((a for a in abogados if a["id"] == caso["abogado"]), {})
         contrato = next((b for b in contratos if b["id"] == caso["contrato"]), {})
+        pago = next((d for d in pagos if d["id"] == caso["pago"]), {})
         cliente_nombre = f'{cliente.get("nombre", "")} {cliente.get("apellidoPaterno", "")}'
         abogado_nombre = f'{abogado.get("nombre", "")} {abogado.get("apellidoPaterno", "")}'
+        monto_pago= pago.get("monto","0.00")
         tabla_casos.insert("", "end", values=(
             caso["id"], 
             cliente_nombre, 
@@ -142,6 +147,7 @@ def mostrar_casos():
             caso.get("fechaInicio", ""),
             caso.get("fechaFin", ""),
             contrato["id"],
+            monto_pago
             
         ))
 
@@ -234,24 +240,27 @@ def agregar_caso():
         }
     
     def agregar_pago():
-
         global nuevo_pago
 
         def guardar_pago():
+
             global nuevo_pago
+
             nuevo_pago = {
             "id": obtener_siguiente_id(pagos),
             "monto": entry_monto_pago.get(),
             "fecha": entry_fecha_pago.get(),
-            "metodo_pago": entry_metodo_pago.get(),
+            "metodo_pago": metodo_pago_var.get(),
             "descripcion": entry_descripcion_pago.get("1.0", tk.END).strip(),
-        }
-        pagos.append(nuevo_pago)
-        guardar_pago()
-        agregar_pago_window.destroy()
+            }
+        
+            pagos.append(nuevo_pago)
+            guardar_pagos()
+            agregar_pago_window.destroy()
 
-        agregar_pago_window = tk.Toplevel()
+        agregar_pago_window = tk.Toplevel(agregar_caso_window)
         agregar_pago_window.title("Agregar Pago")
+
         tk.Label(agregar_pago_window, text="Monto:").pack(pady=5)
         entry_monto_pago = tk.Entry(agregar_pago_window)
         entry_monto_pago.pack()
@@ -262,8 +271,11 @@ def agregar_caso():
         entry_fecha_pago.pack()
 
         tk.Label(agregar_pago_window, text="Método de Pago:").pack(pady=5)
-        entry_metodo_pago = tk.Entry(agregar_pago_window)
-        entry_metodo_pago.pack()
+
+        opciones_pago = ["Efectivo", "Transferencia", "Tarjeta", "Otro"]
+        metodo_pago_var = tk.StringVar(value=opciones_pago[0])
+        menu_metodo_pago = tk.OptionMenu(agregar_pago_window, metodo_pago_var, *opciones_pago)
+        menu_metodo_pago.pack()
 
         tk.Label(agregar_pago_window, text="Descripción:").pack(pady=5)
         entry_descripcion_pago = tk.Text(agregar_pago_window, width=50, height=10)
@@ -274,17 +286,7 @@ def agregar_caso():
  
     def agregar_contrato():
         
-        global nuevo_contrato,pdf_contenido
-
-        def subir_pdf():
-            file_path = filedialog.askopenfilename(
-                title="Seleccionar PDF del contrato",
-                filetypes=[("Archivos PDF", "*.pdf")]
-            )
-            if file_path:
-                entry_pdf.config(text=file_path)
-                with open(file_path,"rb") as file:
-                    pdf_contenido = file.read()
+        global nuevo_contrato
 
         # Solo permite guardar el contrato después de completar los campos
         def guardar_contrato():
@@ -292,7 +294,6 @@ def agregar_caso():
             global nuevo_contrato
             nuevo_contrato = {
                 "id": obtener_siguiente_id(contratos),
-                "PDF": pdf_contenido,
                 "Descripcion": entry_descripcion_contrato.get("1.0", tk.END).strip(),
                 "Fecha": entry_fecha_contrato.get(),
             }
@@ -304,10 +305,7 @@ def agregar_caso():
         agregar_contrato_window.title("Agregar Contrato")
 
         
-        tk.Button(agregar_contrato_window, text="Subir PDF", command=subir_pdf).pack(pady=5)
-        entry_pdf = tk.Label(agregar_contrato_window, text="")
-        entry_pdf.pack(pady=5)
-        
+
         def limitarcaract(event):
             if len(entry_descripcion_contrato.get("1.0",tk.END))>150:
                 entry_descripcion_contrato.delete("1.150",tk.END)
@@ -533,7 +531,7 @@ tk.Button(login_frame, text="Iniciar Sesión", command=verificar_login).pack(pad
 main_frame = tk.Frame(root)
 
 # Crear la tabla para mostrar los casos
-tabla_casos = ttk.Treeview(main_frame, columns=("id", "cliente", "descripcion", "etapa", "estado", "abogado", "fechaInicio", "fechaFin","contrato"), show="headings")
+tabla_casos = ttk.Treeview(main_frame, columns=("id", "cliente", "descripcion", "etapa", "estado", "abogado", "fechaInicio", "fechaFin","contrato","monto"), show="headings")
 
 # Definir encabezados de columnas
 tabla_casos.heading("id", text="ID Caso")
@@ -545,6 +543,7 @@ tabla_casos.heading("abogado", text="Abogado")
 tabla_casos.heading("fechaInicio", text="Fecha Inicio")
 tabla_casos.heading("fechaFin", text="Fecha Fin")
 tabla_casos.heading("contrato",text="Contrato")
+tabla_casos.heading("monto",text="Monto")
 
 tabla_casos.column("id", width=50)
 tabla_casos.column("cliente", width=100)
@@ -555,6 +554,9 @@ tabla_casos.column("abogado", width=100)
 tabla_casos.column("fechaInicio", width=50)
 tabla_casos.column("fechaFin", width=50)
 tabla_casos.column("contrato", width=50)
+tabla_casos.column("monto", width=50)
+
+
 
 tabla_casos.pack(fill="both", expand=True, pady=20)
 
