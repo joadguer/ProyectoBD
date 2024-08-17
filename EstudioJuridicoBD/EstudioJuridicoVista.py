@@ -17,28 +17,23 @@ def verificar_login():
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
 def cargar_datos_en_tabla():
-    # Limpiar la tabla antes de insertar nuevos datos
-    for item in tabla_casos.get_children():
-        tabla_casos.delete(item)
-
-    # Obtener los casos de la base de datos
-    casos = EstudioJuridicoBD.cargar_casos()  
-    
-    # Insertar los datos en la tabla
+    tabla_casos.delete(*tabla_casos.get_children())  # Limpiar la tabla antes de insertar nuevos datos
+    casos = EstudioJuridicoBD.cargar_casos()
     for caso in casos:
         tabla_casos.insert("", "end", values=(
             caso["id"], 
-            caso["cliente_id"], 
+            f'{caso["cliente_nombre"]} {caso["cliente_apellido"]}', 
             caso["descripcion"], 
             caso["etapa"], 
             caso["estado"], 
-            caso["abogado_id"], 
+            f'{caso["abogado_nombre"]} {caso["abogado_apellido"]}', 
             caso["fechaInicio"], 
             caso["fechaFin"], 
             caso["area"],
             caso["contrato_id"], 
             caso["monto"]
         ))
+
 
 areas_y_etapas = {
         "Penal": ["Investigación", "Juicio", "Apelación"],

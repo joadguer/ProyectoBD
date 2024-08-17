@@ -27,11 +27,28 @@ def cargar_abogados():
     return abogados
 
 def cargar_casos():
+    # Consulta SQL con JOIN para obtener nombres y apellidos de clientes y abogados
+    query = """
+    SELECT casos.id, clientes.nombre AS cliente_nombre, clientes.apellido_paterno AS cliente_apellido, 
+           abogados.nombre AS abogado_nombre, abogados.apellido_paterno AS abogado_apellido,
+           casos.descripcion, casos.etapa, casos.estado, casos.fechaInicio, casos.fechaFin, 
+           casos.area, casos.contrato_id, casos.monto
+    FROM Casos casos
+    JOIN Clientes clientes ON casos.cliente_id = clientes.id
+    JOIN Abogados abogados ON casos.abogado_id = abogados.id
+    """
+    
+    # Conectarse a la base de datos
     conexion = conectar_bd()
     cursor = conexion.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM Casos")
+    
+    # Ejecutar la consulta
+    cursor.execute(query)
     casos = cursor.fetchall()
+    
+    # Cerrar la conexión a la base de datos
     conexion.close()
+    
     return casos
 
 def cargar_contratos():
