@@ -469,3 +469,35 @@ def consultar_etapas():
             connection.close()
 
 
+
+def ejecutar_stored_procedure():
+    try:
+        # Conecta a la base de datos
+        connection = create_connection()
+        
+        # Crea un cursor
+        cursor = connection.cursor()
+
+        # Llama al stored procedure
+        cursor.callproc('obtener_datos_demanda')
+
+        # Recoge los resultados
+        results = cursor.stored_results()
+        
+        # Imprime los resultados
+        for result in results:
+            for row in result:
+                print(row)
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+
+    finally:
+        # Cierra el cursor y la conexión
+        if cursor:
+            cursor.close()
+        if connection:
+            connection.close()
+
+# Llama a la función
+ejecutar_stored_procedure()

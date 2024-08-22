@@ -31,7 +31,7 @@ CREATE TABLE demanda (
     Area VARCHAR(50), 
     Etapa VARCHAR(50),
     Estado VARCHAR(50),
-    Monto DECIMAL(10,2),
+    Monto DECIMAL(10,2)
     -- EstadoDeJuicio VARCHAR(255)
 );
 
@@ -116,7 +116,7 @@ CREATE TABLE posee (
 CREATE TABLE trabaja (
     CodigoAbogado INT,
     CodigoContrato INT,
-    PRIMARY KEY (Cedula, CodigoContrato)
+    PRIMARY KEY (CodigoAbogado, CodigoContrato)
 );
 
 

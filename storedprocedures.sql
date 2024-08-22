@@ -319,3 +319,38 @@ END $$
 -- Restaurar el delimitador predeterminado
 DELIMITER ;
 
+
+
+-- store procedure para el query de la base de datos
+DELIMITER //
+
+CREATE PROCEDURE obtener_datos_demanda()
+BEGIN
+    SELECT 
+        d.CodigoDemanda AS idDemanda,
+        CONCAT(p.Nombre, ' ', p.ApellidoP, ' ', p.ApellidoM) AS cliente,
+        d.descripcion AS descripcionDemanda,
+        e.Nombre AS etapa,
+        d.Estado AS estado,
+        CONCAT(a.Nombre, ' ', a.ApellidoP, ' ', a.ApellidoM) AS abogado,
+        d.FechaInicio AS fechaInicio,
+        d.FechaFin AS fechaFin,
+        ar.Nombre AS area,
+        c.estadoGeneral AS contrato,
+        p2.monto AS monto
+    FROM demanda d
+    JOIN posee ps ON d.CodigoDemanda = ps.CodigoDemanda
+    JOIN personaNatural p ON ps.IdentificadorCliente = p.IdentificadorCliente
+    JOIN pertenece pe ON d.CodigoDemanda = pe.CodigoDemanda
+    JOIN area ar ON pe.CodigoArea = ar.CodigoArea
+    JOIN tener te ON ar.CodigoArea = te.CodigoArea
+    JOIN etapa e ON te.CodigoEtapa = e.CodigoEtapa
+    JOIN contrato c ON d.codigoContrato = c.codigoContrato
+    LEFT JOIN trabaja tr ON c.codigoContrato = tr.CodigoContrato
+    LEFT JOIN abogado a ON tr.CodigoAbogado = a.CodigoAbogado
+    LEFT JOIN pago p2 ON c.codigoContrato = p2.codigoContrato;
+END //
+
+DELIMITER ;
+
+
