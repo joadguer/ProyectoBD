@@ -17,24 +17,29 @@ def create_connection():
         print(f"Error al conectar a la base de datos: {e}")
         return None
         
-#Insertar persona juridica
-def insertar_persona_juridica( correo_electronico, nombre, apellido_p, apellido_m,
+def insertar_persona_juridica(correo_electronico, nombre, apellido_p, apellido_m,
                               fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
             cursor.callproc('InsertarPersonaJuridica', [
-                 correo_electronico, nombre, apellido_p, apellido_m,
+                correo_electronico, nombre, apellido_p, apellido_m,
                 fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc
             ])
             connection.commit()
-            print("Persona jurídica insertada exitosamente.")
+            # Obtener el ID generado
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            cliente_id = cursor.fetchone()[0]
+            print("Persona jurídica insertada exitosamente con ID:", cliente_id)
+            return cliente_id
         except Error as e:
             print(f"Error al insertar persona jurídica: {e}")
+            return None
         finally:
             cursor.close()
             connection.close()
+
             
 
 # Función para obtener todos los clientes
@@ -62,7 +67,6 @@ def obtener_clientesJuridicos():
         
 
 
-#Insertar persona natural
 def insertar_persona_natural(correo_electronico, nombre, apellido_p, apellido_m,
                               fecha_nacimiento, telefono, estado_civil, profesion):
     connection = create_connection()
@@ -70,13 +74,18 @@ def insertar_persona_natural(correo_electronico, nombre, apellido_p, apellido_m,
         try:
             cursor = connection.cursor()
             cursor.callproc('InsertarPersonaNatural', [
-                 correo_electronico, nombre, apellido_p, apellido_m,
+                correo_electronico, nombre, apellido_p, apellido_m,
                 fecha_nacimiento, telefono, estado_civil, profesion
             ])
             connection.commit()
-            print("Persona natural insertada exitosamente.")
+            # Obtener el ID generado
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            cliente_id = cursor.fetchone()[0]
+            print("Persona natural insertada exitosamente con ID:", cliente_id)
+            return cliente_id
         except Error as e:
             print(f"Error al insertar persona natural: {e}")
+            return None
         finally:
             cursor.close()
             connection.close()

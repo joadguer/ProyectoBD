@@ -53,9 +53,9 @@ def verificar_login():
 
 def agregar_demanda():
 
-    global cliente_id,abogado_id,contrato_id
-
     def agregar_cliente():
+
+        global cliente_id
 
         def guardar_cliente():
                 global cliente_id
@@ -208,6 +208,8 @@ def agregar_demanda():
 
     
     def agregar_contrato():
+
+        global contrato_id
         agregar_contrato_window = tk.Toplevel(agregar_caso_window)
         agregar_contrato_window.title("Agregar Contrato")
 
@@ -312,17 +314,17 @@ def agregar_demanda():
         etapa = combobox_etapa.get()
         estado = estado_var.get()
         
-        # Asegúrate de que contrato_id y cliente_id estén disponibles
-        if not cliente_id or not contrato_id:
-            messagebox.showerror("Error", "Debe agregar un cliente y un contrato antes de guardar el caso.")
+        if not cliente_id:
+            messagebox.showerror("Error", "Debe agregar un cliente antes de guardar el caso.")
+            return
+        if not contrato_id:
+            messagebox.showerror("Error", "Debe agregar un contrato antes de guardar el caso.")
             return
 
         try:
-            # Guardar el caso en la base de datos
-            dbc.insertar_demanda(cliente_id, abogado_id, contrato_id, descripcion, fechaInicio, fechaFin, area, etapa, estado)
+            dbc.insertar_demanda(contrato_id, descripcion, fechaInicio, fechaFin, area, etapa,estado,Monto=100 )
             messagebox.showinfo("Éxito", "Caso guardado correctamente")
-            agregar_caso_window.destroy()  # Cerrar la ventana de agregar caso
-
+            agregar_caso_window.destroy()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar el caso: {str(e)}")
         
