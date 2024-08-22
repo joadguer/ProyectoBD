@@ -23,7 +23,6 @@ CREATE PROCEDURE ActualizarPago(
     IN p_metodoDePago VARCHAR(255),
     IN p_fecha DATE,
     IN p_monto DECIMAL(10, 2),
-    IN p_concepto VARCHAR(255),
     IN p_descripcion TEXT
 )
 BEGIN
@@ -44,15 +43,18 @@ BEGIN
     SELECT * FROM pago WHERE codigoDemanda = p_codigoDemanda;
 END $$
 
--- Insertar un nuevo contrato
 CREATE PROCEDURE InsertarContrato(
-    IN p_estadoGeneral VARCHAR(255),
-    IN p_descripcion TEXT
+    IN estadoGeneral VARCHAR(255),
+    IN descripcion TEXT
 )
 BEGIN
-    INSERT INTO contrato ( estadoGeneral, descripcion)
-    VALUES ( p_estadoGeneral, p_descripcion);
-END $$
+    INSERT INTO Contratos (estadoGeneral, descripcion) 
+    VALUES (estadoGeneral, descripcion);
+    
+    SELECT LAST_INSERT_ID() AS contrato_id;
+END;
+
+
 
 -- Actualizar un contrato existente
 CREATE PROCEDURE ActualizarContrato(
