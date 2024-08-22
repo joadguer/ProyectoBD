@@ -116,7 +116,7 @@ CREATE TABLE posee (
 CREATE TABLE trabaja (
     CodigoAbogado INT,
     CodigoContrato INT,
-    PRIMARY KEY (Cedula, CodigoContrato)
+    PRIMARY KEY (CodigoAbogado, CodigoContrato)
 );
 
 
