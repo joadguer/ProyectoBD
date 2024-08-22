@@ -5,6 +5,7 @@ DELIMITER $$
 
 -- Insertar un nuevo pago
 CREATE PROCEDURE InsertarPago(
+    IN p_codigoDemanda INT,
     IN p_metodoDePago VARCHAR(255),
     IN p_fecha DATE,
     IN p_monto DECIMAL(10, 2),
