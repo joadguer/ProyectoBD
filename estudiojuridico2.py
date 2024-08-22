@@ -216,17 +216,18 @@ def agregar_demanda():
                 entry_descripcion_contrato.delete("1.150", tk.END)
 
         def guardar_contrato():
+            global contrato_id  # Asegúrate de que esta variable esté definida globalmente
             descripcion = entry_descripcion_contrato.get("1.0", tk.END).strip()
             estadoGeneral = entry_fecha_contrato.get()
 
-            # Guardar el contrato en la base de datos y obtener contrato_id
             try:
                 contrato_id = dbc.insertar_contrato(estadoGeneral, descripcion)
                 if contrato_id:
                     messagebox.showinfo("Éxito", "Contrato guardado correctamente")
                     agregar_contrato_window.destroy()
-                    # Llamar a agregar_pago y pasar el contrato_id
-                    agregar_pago(contrato_id)
+                    # Preguntar al usuario si desea agregar un pago
+                    if messagebox.askyesno("Agregar Pago", "¿Desea agregar un pago para este contrato?"):
+                        agregar_pago(contrato_id)
                 else:
                     raise Exception("No se pudo obtener el ID del contrato")
             except Exception as e:
@@ -301,7 +302,30 @@ def agregar_demanda():
         # Botón para guardar el pago
         tk.Button(agregar_pago_window, text="Guardar Pago", command=guardar_pago).pack(pady=20)
 
+    def guardar_caso():
+        global cliente_id, contrato_id
 
+        descripcion = entry_descripcion.get("1.0", tk.END).strip()
+        fechaInicio = entry_fechaInicio.get()
+        fechaFin = entry_fechaFin.get()
+        area = combobox_area.get()
+        etapa = combobox_etapa.get()
+        estado = estado_var.get()
+        
+        # Asegúrate de que contrato_id y cliente_id estén disponibles
+        if not cliente_id or not contrato_id:
+            messagebox.showerror("Error", "Debe agregar un cliente y un contrato antes de guardar el caso.")
+            return
+
+        try:
+            # Guardar el caso en la base de datos
+            dbc.insertar_demanda(cliente_id, abogado_id, contrato_id, descripcion, fechaInicio, fechaFin, area, etapa, estado)
+            messagebox.showinfo("Éxito", "Caso guardado correctamente")
+            agregar_caso_window.destroy()  # Cerrar la ventana de agregar caso
+
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo guardar el caso: {str(e)}")
+        
 
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
@@ -368,16 +392,16 @@ def agregar_demanda():
     botones_frame = tk.Frame(agregar_caso_window)
     botones_frame.pack(pady=20)
 
+
     btn_agregar_cliente = tk.Button(botones_frame, text="Agregar Cliente",command=agregar_cliente)
     btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado",command=agregar_abogado)
     btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato",command=agregar_contrato)
-    btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso" )
+    btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso",command=guardar_caso)
 
     btn_agregar_cliente.grid(row=0, column=0, padx=10)
     btn_agregar_abogado.grid(row=0, column=1, padx=10)
     btn_agregar_contrato.grid(row=0, column=2, padx=10)
     btn_guardar_caso.grid(row=0, column=4, padx=10)
-
 
 # Crear ventana principal
 root = tk.Tk()
