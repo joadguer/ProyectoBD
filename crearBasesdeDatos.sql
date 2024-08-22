@@ -8,7 +8,7 @@ use EstudioJuridicoDB;
 CREATE TABLE contrato (
     codigoContrato INT AUTO_INCREMENT PRIMARY KEY,
     estadoGeneral VARCHAR(255),
-    descripcion TEXT, 
+    descripcion TEXT
 );
 
 CREATE TABLE pago (
