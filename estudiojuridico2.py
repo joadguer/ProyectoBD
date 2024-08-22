@@ -39,30 +39,20 @@ areas_y_etapas = {
         }
 
 # Función para verificar el inicio de sesión
-def verificar_login():
-    usuario = entry_usuario.get()
-    contraseña = entry_contraseña.get()
-    
-    if usuario == "abogado" and contraseña == "1234":
-        login_frame.pack_forget()
-        main_frame.pack(fill="both", expand=True)
-        #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
-    else:
-        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
-#Funcion para verificar al usuario de ingreso
-
 # def verificar_login():
 #     usuario = entry_usuario.get()
 #     contraseña = entry_contraseña.get()
     
-#     if loginConection.connect_to_database(usuario,contraseña):
-#         connection = dbc.create_connection(usuario, contraseña)
+#     if usuario == "abogado" and contraseña == "1234":
 #         login_frame.pack_forget()
 #         main_frame.pack(fill="both", expand=True)
 #         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
 #     else:
 #         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+
+#Funcion para verificar al usuario de ingreso
+
+# Función para verificar el inicio de sesión
 
 def agregar_demanda():
 
