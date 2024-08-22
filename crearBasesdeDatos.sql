@@ -115,41 +115,45 @@ CREATE TABLE trabaja (
 );
 
 
--- Añadir FK a la tabla 'pago'
 ALTER TABLE pago
     ADD CONSTRAINT fk_pago_contrato
-    FOREIGN KEY (codigoContrato) REFERENCES contrato(codigoContrato);
+    FOREIGN KEY (codigoContrato) REFERENCES contrato(codigoContrato)
+    ON DELETE CASCADE;
 
-
--- Añadir FK a la tabla 'demanda'
 ALTER TABLE demanda
     ADD CONSTRAINT fk_demanda_contrato
-    FOREIGN KEY (codigoContrato) REFERENCES contrato(codigoContrato);
+    FOREIGN KEY (codigoContrato) REFERENCES contrato(codigoContrato)
+    ON DELETE CASCADE;
 
--- Añadir FK a la tabla 'pertenece'
 ALTER TABLE pertenece
     ADD CONSTRAINT fk_pertenece_demanda
-    FOREIGN KEY (CodigoDemanda) REFERENCES demanda(CodigoDemanda),
+    FOREIGN KEY (CodigoDemanda) REFERENCES demanda(CodigoDemanda)
+    ON DELETE CASCADE,
     ADD CONSTRAINT fk_pertenece_area
-    FOREIGN KEY (CodigoArea) REFERENCES area(CodigoArea);
+    FOREIGN KEY (CodigoArea) REFERENCES area(CodigoArea)
+    ON DELETE CASCADE;
 
--- Añadir FK a la tabla 'tener'
 ALTER TABLE tener
     ADD CONSTRAINT fk_tener_area
-    FOREIGN KEY (CodigoArea) REFERENCES area(CodigoArea),
+    FOREIGN KEY (CodigoArea) REFERENCES area(CodigoArea)
+    ON DELETE CASCADE,
     ADD CONSTRAINT fk_tener_etapa
-    FOREIGN KEY (CodigoEtapa) REFERENCES etapa(CodigoEtapa);
+    FOREIGN KEY (CodigoEtapa) REFERENCES etapa(CodigoEtapa)
+    ON DELETE CASCADE;
 
--- Añadir FK a la tabla 'posee'
 ALTER TABLE posee
     ADD CONSTRAINT fk_posee_cliente
-    FOREIGN KEY (IdentificadorCliente) REFERENCES personaNatural(IdentificadorCliente),
+    FOREIGN KEY (IdentificadorCliente) REFERENCES personaNatural(IdentificadorCliente)
+    ON DELETE CASCADE,
     ADD CONSTRAINT fk_posee_demanda
-    FOREIGN KEY (CodigoDemanda) REFERENCES demanda(CodigoDemanda);
+    FOREIGN KEY (CodigoDemanda) REFERENCES demanda(CodigoDemanda)
+    ON DELETE CASCADE;
 
--- Añadir FK a la tabla 'trabaja'
 ALTER TABLE trabaja
     ADD CONSTRAINT fk_trabaja_abogado
-    FOREIGN KEY (Cedula) REFERENCES abogado(Cedula),
+    FOREIGN KEY (Cedula) REFERENCES abogado(Cedula)
+    ON DELETE CASCADE,
     ADD CONSTRAINT fk_trabaja_contrato
-    FOREIGN KEY (CodigoContrato) REFERENCES contrato(codigoContrato);
+    FOREIGN KEY (CodigoContrato) REFERENCES contrato(codigoContrato)
+    ON DELETE CASCADE;
+

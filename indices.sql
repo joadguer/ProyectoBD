@@ -1,0 +1,10 @@
+CREATE INDEX idx_pago_contrato ON pago (codigoContrato);
+CREATE INDEX idx_demanda_contrato ON demanda (codigoContrato);
+CREATE INDEX idx_pertenece_demanda ON pertenece (CodigoDemanda);
+CREATE INDEX idx_pertenece_area ON pertenece (CodigoArea);
+CREATE INDEX idx_tener_area ON tener (CodigoArea);
+CREATE INDEX idx_tener_etapa ON tener (CodigoEtapa);
+CREATE INDEX idx_posee_cliente ON posee (IdentificadorCliente);
+CREATE INDEX idx_posee_demanda ON posee (CodigoDemanda);
+CREATE INDEX idx_trabaja_abogado ON trabaja (Cedula);
+CREATE INDEX idx_trabaja_contrato ON trabaja (CodigoContrato);
