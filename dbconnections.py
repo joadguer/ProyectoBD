@@ -478,6 +478,32 @@ def consultar_etapas():
             cursor.close()
             connection.close()
 
+import mysql.connector
+from mysql.connector import Error
+
+def obtener_monto_por_pago(codigoPago):
+    try:
+        # Conecta a la base de datos
+        connection = create_connection()
+        
+        # Crea un cursor
+        cursor = connection.cursor()
+        out_param = cursor.callproc('ObtenerMontoPorPago', [codigoPago, 0])
+        # Obtener el monto del parámetro de salida
+        monto = out_param[1]
+        # print(f"El monto del pago con ID {codigoPago} es: {monto}")
+        return monto
+            
+    except Error as e:
+        print(f"Error: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+# Ejemplo de uso
+obtener_monto_por_pago(1)
+
 
 
 def ejecutar_stored_procedure():
@@ -511,3 +537,5 @@ def ejecutar_stored_procedure():
 
 # Llama a la función
 ejecutar_stored_procedure()
+
+

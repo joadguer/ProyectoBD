@@ -14,6 +14,10 @@ VALUES ('Etapa de prueba', '2024-01-01', '2024-12-31', 'En progreso', 'Etapa de 
 INSERT INTO personaNatural (CorreoElectronico, Nombre, ApellidoP, ApellidoM, FechaNacimiento, Telefono, EstadoCivil, Profesion)
 VALUES ('cliente@ejemplo.com', 'Juan', 'Pérez', 'Gómez', '1985-05-15', '123456789', 'Soltero', 'Abogado');
 
+-- Inserta un abogado
+INSERT INTO abogado (Cedula, Nombre, ApellidoP, ApellidoM, FechaNacimiento, AreaDeEnfoque)
+VALUES (1234567890, 'Carlos', 'Martínez', 'Rodríguez', '1980-07-20', 'Derecho Penal');
+
 -- Inserta una demanda
 INSERT INTO demanda (codigoContrato, descripcion, FechaInicio, FechaFin, Area, Etapa, Estado, Monto)
 VALUES (1, 'Demanda de prueba', '2024-01-01', '2024-12-31', 'Área de Prueba', 'Etapa de Prueba', 'En curso', 10000.00);
@@ -29,3 +33,7 @@ VALUES (1, 1);
 -- Inserta en la tabla 'posee'
 INSERT INTO posee (IdentificadorCliente, CodigoDemanda)
 VALUES (1, 1);
+
+-- Inserta en la tabla 'pago'
+INSERT INTO pago (codigoContrato, metodoDePago, fecha, monto, descripcion)
+VALUES (1, 'Transferencia Bancaria', '2024-01-15', 10000.00, 'Pago completo de la demanda de prueba');

@@ -356,3 +356,18 @@ END //
 DELIMITER ;
 
 
+DELIMITER $$
+
+CREATE PROCEDURE ObtenerMontoPorPago(
+    IN p_codigoPago INT,
+    OUT p_monto DECIMAL(10,2)
+)
+BEGIN
+    -- Seleccionar el monto del pago correspondiente al codigoPago
+    SELECT monto
+    INTO p_monto
+    FROM pago
+    WHERE codigoPago = p_codigoPago;
+END $$
+
+DELIMITER ;
