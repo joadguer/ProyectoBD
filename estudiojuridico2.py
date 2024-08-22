@@ -254,9 +254,10 @@ def agregar_demanda():
 
 
     def agregar_pago(contrato_id):
-
+        global pago_id
 
         def guardar_pago():
+            global pago_id
             monto = entry_monto_pago.get()
             metodo_pago = metodo_pago_var.get()
             descripcion = entry_descripcion_pago.get("1.0", tk.END).strip()
@@ -266,7 +267,7 @@ def agregar_demanda():
             if contrato_id:  
                 try:
                     # Guardar el pago en la base de datos
-                    dbc.insertar_pago(contrato_id,metodo_pago, fecha_pago, monto,  descripcion)
+                    pago_id=dbc.insertar_pago(contrato_id,metodo_pago, fecha_pago, monto,  descripcion)
                     messagebox.showinfo("Éxito", "Pago guardado correctamente")
                     agregar_pago_window.destroy()
                 except Exception as e:
