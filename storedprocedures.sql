@@ -218,8 +218,8 @@ CREATE PROCEDURE InsertarPersonaNatural(
     IN p_Profesion VARCHAR(255)
 )
 BEGIN
-    INSERT INTO personaNatural (IdentificadorCliente, CorreoElectronico, Nombre, ApellidoP, ApellidoM, FechaNacimiento, Telefono, EstadoCivil, Profesion)
-    VALUES (p_IdentificadorCliente, p_CorreoElectronico, p_Nombre, p_ApellidoP, p_ApellidoM, p_FechaNacimiento, p_Telefono, p_EstadoCivil, p_Profesion);
+    INSERT INTO personaNatural ( CorreoElectronico, Nombre, ApellidoP, ApellidoM, FechaNacimiento, Telefono, EstadoCivil, Profesion)
+    VALUES (p_CorreoElectronico, p_Nombre, p_ApellidoP, p_ApellidoM, p_FechaNacimiento, p_Telefono, p_EstadoCivil, p_Profesion);
 END $$
 
 -- Actualizar una persona natural existente
