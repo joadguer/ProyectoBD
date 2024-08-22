@@ -47,9 +47,31 @@ def verificar_login():
     if usuario == "usuarioprincipal" and contraseña == "1":
         login_frame.pack_forget()
         main_frame.pack(fill="both", expand=True)
-        #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
+        agregardatostabla()
     else:
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+
+
+
+def agregardatostabla():
+    tabla_casos.delete(*tabla_casos.get_children())
+    casos= dbc.obtener_datos_casos()
+    for caso in casos:
+        tabla_casos.insert("", "end", values=(
+        caso["id"], 
+        f'{caso["cliente_nombre"]} {caso["cliente_apellido"]}', 
+        caso["descripcion"], 
+        caso["etapa"], 
+        caso["estado"], 
+        f'{caso["abogado_nombre"]} {caso["abogado_apellido"]}', 
+        caso["fechaInicio"], 
+        caso["fechaFin"], 
+        caso["area"],
+        caso["contrato_id"], 
+        caso["monto"]
+    ))
+
+
 
 def agregar_demanda():
 
@@ -325,6 +347,7 @@ def agregar_demanda():
         try:
             dbc.insertar_demanda(contrato_id, descripcion, fechaInicio, fechaFin, area, etapa,estado,Monto=100 )
             messagebox.showinfo("Éxito", "Caso guardado correctamente")
+            agregardatostabla()
             agregar_caso_window.destroy()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar el caso: {str(e)}")

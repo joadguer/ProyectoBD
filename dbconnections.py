@@ -522,7 +522,7 @@ def obtener_datos_casos():
         connection = create_connection()
         
         # Crea un cursor
-        cursor = connection.cursor()
+        cursor = connection.cursor(dictionary=True)  # Esto asegura que los resultados sean devueltos como diccionario
 
         # Llama al stored procedure
         cursor.callproc('obtener_datos_demanda')
@@ -530,13 +530,31 @@ def obtener_datos_casos():
         # Recoge los resultados
         results = cursor.stored_results()
         
-        # Imprime los resultados
+        # Recorre los resultados
+        casos = []
         for result in results:
             for row in result:
-                print(row)
+                casos.append({
+                    "id": row["idDemanda"],
+                    "cliente_nombre": row["cliente"].split()[0],  # Asume que el nombre es la primera palabra
+                    "cliente_apellido": " ".join(row["cliente"].split()[1:]),  # Asume que el apellido es el resto
+                    "descripcion": row["descripcionDemanda"],
+                    "etapa": row["etapa"],
+                    "estado": row["estado"],
+                    "abogado_nombre": row["abogado"].split()[0] if row["abogado"] else "",  # Verifica si hay abogado
+                    "abogado_apellido": " ".join(row["abogado"].split()[1:]) if row["abogado"] else "",
+                    "fechaInicio": row["fechaInicio"],
+                    "fechaFin": row["fechaFin"],
+                    "area": row["area"],
+                    "contrato_id": row["contrato"],
+                    "monto": row["monto"]
+                })
+
+        return casos
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
+        return []
 
     finally:
         # Cierra el cursor y la conexión
@@ -545,7 +563,6 @@ def obtener_datos_casos():
         if connection:
             connection.close()
 
-# Llama a la función
-obtener_datos_casos()
+
 
 
