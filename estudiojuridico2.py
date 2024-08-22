@@ -37,22 +37,17 @@ areas_y_etapas = {
         "Laboral": ["Conciliación", "Juicio", "Sentencia"],
         "Tributario": ["Notificación", "Audiencia", "Resolución"]
         }
-
 # Función para verificar el inicio de sesión
-# def verificar_login():
-#     usuario = entry_usuario.get()
-#     contraseña = entry_contraseña.get()
+def verificar_login():
+    usuario = entry_usuario.get()
+    contraseña = entry_contraseña.get()
     
-#     if usuario == "abogado" and contraseña == "1234":
-#         login_frame.pack_forget()
-#         main_frame.pack(fill="both", expand=True)
-#         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
-#     else:
-#         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
-#Funcion para verificar al usuario de ingreso
-
-# Función para verificar el inicio de sesión
+    if usuario == "abogadoprincipal" and contraseña == "1":
+        login_frame.pack_forget()
+        main_frame.pack(fill="both", expand=True)
+        #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
+    else:
+        messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
 def agregar_demanda():
 
