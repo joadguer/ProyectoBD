@@ -286,12 +286,12 @@ def consultar_contratos_por_pago(codigoPago):
             connection.close()
 
 # Función para insertar una nueva demanda
-def insertar_demanda( codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio):
+def insertar_demanda(codigoContrato, descripcion, FechaInicio, FechaFin, Area, Etapa, Estado, Monto):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarDemanda', [ codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio])
+            cursor.callproc('InsertarDemanda', [codigoContrato, descripcion, FechaInicio, FechaFin, Area, Etapa, Estado, Monto])
             connection.commit()
             print("Demanda insertada exitosamente")
         except Error as e:
@@ -299,6 +299,7 @@ def insertar_demanda( codigoContrato, EstadoDeProceso, descripcion, FechaInicio,
         finally:
             cursor.close()
             connection.close()
+
 
 # Función para actualizar una demanda existente
 def actualizar_demanda(CodigoDemanda, codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio):

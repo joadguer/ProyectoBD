@@ -84,17 +84,19 @@ END $$
 -- Insertar una nueva demanda
 CREATE PROCEDURE InsertarDemanda(
     IN p_codigoContrato INT,
-    IN p_EstadoDeProceso VARCHAR(255),
     IN p_descripcion TEXT,
     IN p_FechaInicio DATE,
     IN p_FechaFin DATE,
-    IN p_Audiencia DATE,
-    IN p_EstadoDeJuicio VARCHAR(255)
+    IN p_Area VARCHAR(50),
+    IN p_Etapa VARCHAR(50),
+    IN p_Estado VARCHAR(50),
+    IN p_Monto DECIMAL(10,2)
 )
 BEGIN
-    INSERT INTO demanda (codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio)
-    VALUES (p_codigoContrato, p_EstadoDeProceso, p_descripcion, p_FechaInicio, p_FechaFin, p_Audiencia, p_EstadoDeJuicio);
-END $$
+    INSERT INTO demanda (codigoContrato, descripcion, FechaInicio, FechaFin, Area, Etapa, Estado, Monto)
+    VALUES (p_codigoContrato, p_descripcion, p_FechaInicio, p_FechaFin, p_Area, p_Etapa, p_Estado, p_Monto);
+END $$ 
+
 
 -- Actualizar una demanda existente
 CREATE PROCEDURE ActualizarDemanda(
