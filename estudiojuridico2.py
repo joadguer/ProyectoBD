@@ -30,6 +30,10 @@ def cargar_clientes():
             connection.close()
 
 
+
+
+
+
 # Función para verificar el inicio de sesión
 def verificar_login():
     usuario = entry_usuario.get()
