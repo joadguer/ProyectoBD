@@ -146,8 +146,8 @@ def actualizar_abogado(cedula, nombre, apellido_m, apellido_p, fecha_nacimiento,
         finally:
             cursor.close()
             connection.close()
-def eliminar_abogado(cedula, usuario, clave):
-    connection = create_connection(usuario, clave)
+def eliminar_abogado(cedula):
+    connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
@@ -329,6 +329,11 @@ def actualizar_demanda(CodigoDemanda, codigoContrato, EstadoDeProceso, descripci
             cursor.callproc('ActualizarDemanda', [CodigoDemanda, codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio])
             connection.commit()
             print("Demanda actualizada exitosamente")
+
+
+
+
+
         except Error as e:
             print(f"Error al actualizar demanda: {e}")
         finally:
@@ -566,3 +571,73 @@ def obtener_datos_casos():
 
 
 
+def insertar_pertenencia():
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Ejecutar el procedimiento almacenado para insertar en la tabla pertenece
+            cursor.callproc('InsertarPertenencia')
+            connection.commit()
+            
+            print("Pertenencia insertada exitosamente.")
+            
+        except Error as e:
+            print(f"Error al insertar pertenencia: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
+def insertar_tener():
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Ejecutar el procedimiento almacenado para insertar en la tabla tener
+            cursor.callproc('InsertarTener')
+            connection.commit()
+            
+            print("Relación tener insertada exitosamente.")
+            
+        except Error as e:
+            print(f"Error al insertar relación tener: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
+def insertar_posee():
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Ejecutar el procedimiento almacenado para insertar en la tabla posee
+            cursor.callproc('InsertarPosee')
+            connection.commit()
+            
+            print("Relación posee insertada exitosamente.")
+            
+        except Error as e:
+            print(f"Error al insertar relación posee: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
+def insertar_trabaja():
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            # Ejecutar el procedimiento almacenado para insertar en la tabla trabaja
+            cursor.callproc('InsertarTrabaja')
+            connection.commit()
+            
+            print("Relación trabaja insertada exitosamente.")
+            
+        except Error as e:
+            print(f"Error al insertar relación trabaja: {e}")
+        finally:
+            cursor.close()
+            connection.close()

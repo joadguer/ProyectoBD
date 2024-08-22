@@ -371,3 +371,92 @@ BEGIN
 END $$
 
 DELIMITER ;
+
+
+
+
+
+-- Procedimiento para insertar en la tabla 'pertenece'
+DELIMITER //
+
+CREATE PROCEDURE InsertarPertenencia()
+BEGIN
+    DECLARE ultimoCodigoDemanda INT;
+    DECLARE ultimoCodigoArea INT;
+
+    -- Obtener el último CódigoDemanda insertado
+    SELECT MAX(CodigoDemanda) INTO ultimoCodigoDemanda FROM demanda;
+
+    -- Obtener el último CódigoArea insertado
+    SELECT MAX(CodigoArea) INTO ultimoCodigoArea FROM area;
+
+    -- Insertar en la tabla pertenece
+    INSERT INTO pertenece (CodigoDemanda, CodigoArea) 
+    VALUES (ultimoCodigoDemanda, ultimoCodigoArea);
+END //
+
+DELIMITER ;
+
+-- Procedimiento para insertar en la tabla 'tener'
+DELIMITER //
+
+CREATE PROCEDURE InsertarTener()
+BEGIN
+    DECLARE ultimoCodigoArea INT;
+    DECLARE ultimoCodigoEtapa INT;
+
+    -- Obtener el último CódigoArea insertado
+    SELECT MAX(CodigoArea) INTO ultimoCodigoArea FROM area;
+
+    -- Obtener el último CódigoEtapa insertado
+    SELECT MAX(CodigoEtapa) INTO ultimoCodigoEtapa FROM etapa;
+
+    -- Insertar en la tabla tener
+    INSERT INTO tener (CodigoArea, CodigoEtapa) 
+    VALUES (ultimoCodigoArea, ultimoCodigoEtapa);
+END //
+
+DELIMITER ;
+
+-- Procedimiento para insertar en la tabla 'posee'
+DELIMITER //
+
+CREATE PROCEDURE InsertarPosee()
+BEGIN
+    DECLARE ultimoIdentificadorCliente INT;
+    DECLARE ultimoCodigoDemanda INT;
+
+    -- Obtener el último IdentificadorCliente insertado
+    SELECT MAX(IdentificadorCliente) INTO ultimoIdentificadorCliente FROM personaNatural;
+
+    -- Obtener el último CódigoDemanda insertado
+    SELECT MAX(CodigoDemanda) INTO ultimoCodigoDemanda FROM demanda;
+
+    -- Insertar en la tabla posee
+    INSERT INTO posee (IdentificadorCliente, CodigoDemanda) 
+    VALUES (ultimoIdentificadorCliente, ultimoCodigoDemanda);
+END //
+
+DELIMITER ;
+
+-- Procedimiento para insertar en la tabla 'trabaja'
+DELIMITER //
+
+CREATE PROCEDURE InsertarTrabaja()
+BEGIN
+    DECLARE ultimoCodigoAbogado INT;
+    DECLARE ultimoCodigoContrato INT;
+
+    -- Obtener el último CódigoAbogado insertado
+    SELECT MAX(CodigoAbogado) INTO ultimoCodigoAbogado FROM abogado;
+
+    -- Obtener el último CódigoContrato insertado
+    SELECT MAX(CodigoContrato) INTO ultimoCodigoContrato FROM contrato;
+
+    -- Insertar en la tabla trabaja
+    INSERT INTO trabaja (CodigoAbogado, CodigoContrato) 
+    VALUES (ultimoCodigoAbogado, ultimoCodigoContrato);
+END //
+
+DELIMITER ;
+
