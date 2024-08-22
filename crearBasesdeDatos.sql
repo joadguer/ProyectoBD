@@ -2,21 +2,21 @@
 drop database  EstudioJuridicoDB;
 create database EstudioJuridicoDB;
 use EstudioJuridicoDB;
-CREATE TABLE pago (
-    codigoPago INT AUTO_INCREMENT PRIMARY KEY,
-    codigoDemanda INT,
-    metodoDePago VARCHAR(255),
-    fecha DATE,
-    monto DECIMAL(10, 2),
-    concepto VARCHAR(255),
-    descripcion TEXT
-);
+
 
 -- Crear la tabla 'contrato'
 CREATE TABLE contrato (
     codigoContrato INT AUTO_INCREMENT PRIMARY KEY,
-    codigoPago INT,
     estadoGeneral VARCHAR(255),
+    descripcion TEXT, 
+);
+
+CREATE TABLE pago (
+    codigoPago INT AUTO_INCREMENT PRIMARY KEY,
+    codigoContrato INT,
+    metodoDePago VARCHAR(255),
+    fecha DATE,
+    monto DECIMAL(10, 2),
     descripcion TEXT
 );
 
@@ -79,7 +79,8 @@ CREATE TABLE personaJuridica (
 
 -- Crear la tabla 'abogado'
 CREATE TABLE abogado (
-    Cedula INT PRIMARY KEY,
+    CodigoAbogado INT AUTO_INCREMENT PRIMARY KEY,
+    Cedula INT UNIQUE,
     Nombre VARCHAR(255),
     ApellidoP VARCHAR(255),
     ApellidoM VARCHAR(255),
@@ -118,13 +119,10 @@ CREATE TABLE trabaja (
 
 -- Añadir FK a la tabla 'pago'
 ALTER TABLE pago
-    ADD CONSTRAINT fk_pago_demanda
-    FOREIGN KEY (codigoDemanda) REFERENCES demanda(CodigoDemanda);
+    ADD CONSTRAINT fk_pago_contrato
+    FOREIGN KEY (codigoContrato) REFERENCES contrato(codigoContrato);
 
--- Añadir FK a la tabla 'contrato'
-ALTER TABLE contrato
-    ADD CONSTRAINT fk_contrato_pago
-    FOREIGN KEY (codigoPago) REFERENCES pago(codigoPago);
+
 
 -- Añadir FK a la tabla 'demanda'
 ALTER TABLE demanda

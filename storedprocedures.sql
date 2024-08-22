@@ -47,13 +47,12 @@ END $$
 
 -- Insertar un nuevo contrato
 CREATE PROCEDURE InsertarContrato(
-    IN p_codigoPago INT,
     IN p_estadoGeneral VARCHAR(255),
     IN p_descripcion TEXT
 )
 BEGIN
-    INSERT INTO contrato ( codigoPago, estadoGeneral, descripcion)
-    VALUES (p_codigoPago, p_estadoGeneral, p_descripcion);
+    INSERT INTO contrato ( estadoGeneral, descripcion)
+    VALUES ( p_estadoGeneral, p_descripcion);
 END $$
 
 -- Actualizar un contrato existente

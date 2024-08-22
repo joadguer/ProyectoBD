@@ -214,12 +214,12 @@ def consultar_pagos_por_demanda(codigoDemanda):
             connection.close()
 
 # Función para insertar un nuevo contrato
-def insertar_contrato(codigoPago, estadoGeneral, descripcion):
+def insertar_contrato(estadoGeneral, descripcion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarContrato', [ codigoPago, estadoGeneral, descripcion])
+            cursor.callproc('InsertarContrato', [estadoGeneral, descripcion])
             connection.commit()
             print("Contrato insertado exitosamente")
         except Error as e:
