@@ -268,11 +268,11 @@ def agregar_demanda():
 
         def guardar_contrato():
             descripcion = entry_descripcion_contrato.get("1.0", tk.END).strip()
-            fecha_contrato = entry_fecha_contrato.get()
+            estadoGeneral = entry_fecha_contrato.get()
 
             # Guardar el contrato en la base de datos y obtener contrato_id
             try:
-                contrato_id = dbc.insertar_contrato(fecha_contrato, descripcion)
+                contrato_id = dbc.insertar_contrato(estadoGeneral, descripcion)
                 messagebox.showinfo("Éxito", "Contrato guardado correctamente")
                 agregar_contrato_window.destroy()
                 # Aquí puedes llamar a agregar_pago(contrato_id) si es necesario
