@@ -23,12 +23,16 @@ CREATE TABLE contrato (
 CREATE TABLE demanda (
     CodigoDemanda INT AUTO_INCREMENT PRIMARY KEY,
     codigoContrato INT,
-    EstadoDeProceso VARCHAR(255),
+    -- EstadoDeProceso VARCHAR(255),
     descripcion TEXT,
     FechaInicio DATE,
     FechaFin DATE,
-    Audiencia DATE,
-    EstadoDeJuicio VARCHAR(255)
+    -- Audiencia DATE,
+    Area VARCHAR(50), 
+    Etapa VARCHAR(50),
+    Estado VARCHAR(50),
+    Monto DECIMAL(10,2),
+    -- EstadoDeJuicio VARCHAR(255)
 );
 
 -- Crear la tabla 'area'
