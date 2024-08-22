@@ -4,8 +4,9 @@ import json
 import os
 import dbconnections as dbc
 from mysql.connector import Error
+import loginConection 
 
-connection = dbc.create_connection()
+global connection
 
 # Función para cargar los datos de los clientes desde la base de datos
 def cargar_clientes():
@@ -34,18 +35,30 @@ def cargar_clientes():
 
 
 
-# Función para verificar el inicio de sesión
+# # Función para verificar el inicio de sesión
+# def verificar_login():
+#     usuario = entry_usuario.get()
+#     contraseña = entry_contraseña.get()
+    
+#     if usuario == "abogado" and contraseña == "1234":
+#         login_frame.pack_forget()
+#         main_frame.pack(fill="both", expand=True)
+#         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
+#     else:
+#         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+
+#Funcion para verificar al usuario de ingreso
 def verificar_login():
     usuario = entry_usuario.get()
     contraseña = entry_contraseña.get()
     
-    if usuario == "abogado" and contraseña == "1234":
+    if loginConection.connect_to_database(usuario,contraseña):
+        connection = dbc.create_connection(usuario, contraseña)
         login_frame.pack_forget()
         main_frame.pack(fill="both", expand=True)
         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
     else:
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
 
 
 # Crear ventana principal
