@@ -207,23 +207,53 @@ def agregar_demanda():
         tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
 
     
+    def agregar_pago():
 
+        global 
+        def guardar_pago():
+            monto = entry_monto_pago.get()
+            metodo_pago = metodo_pago_var.get()
+            descripcion = entry_descripcion_pago.get("1.0", tk.END).strip()
 
+            if contrato_id:  # Verificar que el contrato_id esté disponible
+                try:
+                    dbc.guardar_pago(monto, metodo_pago, descripcion, contrato_id)
+                    messagebox.showinfo("Éxito", "Pago guardado correctamente")
+                    agregar_pago_window.destroy()
+                except Exception as e:
+                    messagebox.showerror("Error", f"No se pudo guardar el pago: {e}")
+            else:
+                messagebox.showerror("Error", "No se pudo identificar el contrato")
 
+                # Crear la ventana para agregar un pago
+        agregar_pago_window = tk.Toplevel()
+        agregar_pago_window.title("Agregar Pago")
 
+        # Campo para el monto del pago
+        tk.Label(agregar_pago_window, text="Monto:").pack(pady=5)
+        entry_monto_pago = tk.Entry(agregar_pago_window)
+        entry_monto_pago.pack()
 
+        # Campo para la fecha del pago
+        tk.Label(agregar_pago_window, text="Fecha:").pack(pady=5)
+        entry_fecha_pago = DateEntry(agregar_pago_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
+                                    foreground='black', borderwidth=2)
+        entry_fecha_pago.pack()
 
+        # Campo para seleccionar el método de pago
+        tk.Label(agregar_pago_window, text="Método de Pago:").pack(pady=5)
+        opciones_pago = ["Efectivo", "Transferencia", "Tarjeta", "Otro"]
+        metodo_pago_var = tk.StringVar(value=opciones_pago[0])
+        menu_metodo_pago = tk.OptionMenu(agregar_pago_window, metodo_pago_var, *opciones_pago)
+        menu_metodo_pago.pack()
 
+        # Campo para la descripción del pago
+        tk.Label(agregar_pago_window, text="Descripción:").pack(pady=5)
+        entry_descripcion_pago = tk.Text(agregar_pago_window, width=50, height=10)
+        entry_descripcion_pago.pack()
 
-
-
-
-
-
-
-
-
-
+        # Botón para guardar el pago
+        tk.Button(agregar_pago_window, text="Guardar Pago", command=lambda:guardar_pago()).pack(pady=20)
 
 
     
