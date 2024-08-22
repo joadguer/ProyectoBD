@@ -205,13 +205,34 @@ def agregar_demanda():
         entry_area_enfoque.pack()
 
         tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
+
     
-    def agregar_contrato(): 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    def agregar_contrato(pago_id): 
         
         global contrato_id
         agregar_contrato_window = tk.Toplevel(agregar_caso_window)
         agregar_contrato_window.title("Agregar Contrato")
-        pdf_contenido = None 
+      
         def limitarcaract(event):
             if len(entry_descripcion_contrato.get("1.0",tk.END))>150:
                 entry_descripcion_contrato.delete("1.150",tk.END)
@@ -221,15 +242,10 @@ def agregar_demanda():
             global contrato_id
             descripcion= entry_descripcion.get("1.0", tk.END).strip() 
             fecha = entry_fecha_contrato.get()
-
-            if pdf_contenido:
-                contrato_id = dbc.insertar_contrato(descripcion)
-                messagebox.showinfo("Éxito", "Contrato guardado correctamente")
-                agregar_contrato_window.destroy()
-                agregar_pago(contrato_id)
-                agregar_contrato_window.destroy()
-            else:
-                messagebox.showerror("Error","Debe seleccionar un archivo PDF")
+            
+            contrato_id = dbc.insertar_contrato(descripcion)
+            messagebox.showinfo("Éxito", "Contrato guardado correctamente")
+            agregar_contrato_window.destroy()
 
         tk.Label(agregar_contrato_window, text="Descripcion:").pack(pady=5)
         entry_descripcion_contrato = tk.Text(agregar_contrato_window,width=50,height=10)
@@ -241,7 +257,7 @@ def agregar_demanda():
                             foreground='black', borderwidth=2)
         entry_fecha_contrato.pack()
 
-        tk.Button(agregar_contrato_window, text="Seleccionar PDF").pack(pady=10)
+
         tk.Button(agregar_contrato_window, text="Guardar Contrato",command=guardar_contrato).pack(pady=20)
 
     agregar_caso_window = tk.Toplevel(root)
@@ -311,7 +327,7 @@ def agregar_demanda():
 
     btn_agregar_cliente = tk.Button(botones_frame, text="Agregar Cliente",command=agregar_cliente)
     btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado",command=agregar_abogado)
-    btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato")
+    btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato",command=agregar_contrato)
     btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso" )
 
     btn_agregar_cliente.grid(row=0, column=0, padx=10)
