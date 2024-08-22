@@ -2,12 +2,12 @@ import mysql.connector
 from mysql.connector import Error
 
 # Configura la conexión a la base de datos
-def create_connection():
+def create_connection(usuario, clave):
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            user='abogadoprincipal',  # Cambia esto por tu usuario
-            password='2',  # Cambia esto por tu contraseña
+            user= usuario,  
+            password= clave,  
             database='EstudioJuridicoDB'
         )
         if connection.is_connected():
