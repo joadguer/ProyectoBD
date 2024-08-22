@@ -1,10 +1,6 @@
-create database EstudioJuridicoDB;
-use EstudioJuridicoDB;
-
-
 -- Crear la tabla 'pago'
 CREATE TABLE pago (
-    codigoPago INT PRIMARY KEY,
+    codigoPago INT AUTO_INCREMENT PRIMARY KEY,
     codigoDemanda INT,
     metodoDePago VARCHAR(255),
     fecha DATE,
@@ -15,7 +11,7 @@ CREATE TABLE pago (
 
 -- Crear la tabla 'contrato'
 CREATE TABLE contrato (
-    codigoContrato INT PRIMARY KEY,
+    codigoContrato INT AUTO_INCREMENT PRIMARY KEY,
     codigoPago INT,
     estadoGeneral VARCHAR(255),
     descripcion TEXT
@@ -23,7 +19,7 @@ CREATE TABLE contrato (
 
 -- Crear la tabla 'demanda'
 CREATE TABLE demanda (
-    CodigoDemanda INT PRIMARY KEY,
+    CodigoDemanda INT AUTO_INCREMENT PRIMARY KEY,
     codigoContrato INT,
     EstadoDeProceso VARCHAR(255),
     descripcion TEXT,
@@ -35,7 +31,7 @@ CREATE TABLE demanda (
 
 -- Crear la tabla 'area'
 CREATE TABLE area (
-    CodigoArea INT PRIMARY KEY,
+    CodigoArea INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255),
     Descripcion TEXT,
     TipoDeProceso VARCHAR(255)
@@ -43,7 +39,7 @@ CREATE TABLE area (
 
 -- Crear la tabla 'etapa'
 CREATE TABLE etapa (
-    CodigoEtapa INT PRIMARY KEY,
+    CodigoEtapa INT AUTO_INCREMENT PRIMARY KEY,
     Descripcion TEXT,
     FechaInicio DATE,
     FechaFin DATE,
@@ -53,7 +49,7 @@ CREATE TABLE etapa (
 
 -- Crear la tabla 'personaNatural'
 CREATE TABLE personaNatural (
-    IdentificadorCliente INT PRIMARY KEY,
+    IdentificadorCliente INT AUTO_INCREMENT PRIMARY KEY,
     CorreoElectronico VARCHAR(255),
     Nombre VARCHAR(255),
     ApellidoP VARCHAR(255),
@@ -66,7 +62,7 @@ CREATE TABLE personaNatural (
 
 -- Crear la tabla 'personaJuridica'
 CREATE TABLE personaJuridica (
-    IdentificadorCliente INT PRIMARY KEY,
+    IdentificadorCliente INT AUTO_INCREMENT PRIMARY KEY,
     CorreoElectronico VARCHAR(255),
     Nombre VARCHAR(255),
     ApellidoP VARCHAR(255),
@@ -80,7 +76,7 @@ CREATE TABLE personaJuridica (
 
 -- Crear la tabla 'abogado'
 CREATE TABLE abogado (
-    Cedula INT PRIMARY KEY,
+    Cedula INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(255),
     ApellidoP VARCHAR(255),
     ApellidoM VARCHAR(255),
@@ -116,7 +112,6 @@ CREATE TABLE trabaja (
     PRIMARY KEY (Cedula, CodigoContrato)
 );
 
--- Añadir las claves foráneas
 
 -- Añadir FK a la tabla 'pago'
 ALTER TABLE pago
@@ -160,5 +155,3 @@ ALTER TABLE trabaja
     FOREIGN KEY (Cedula) REFERENCES abogado(Cedula),
     ADD CONSTRAINT fk_trabaja_contrato
     FOREIGN KEY (CodigoContrato) REFERENCES contrato(codigoContrato);
-
--- drop database EstudioJuridicoDB;
