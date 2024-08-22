@@ -110,7 +110,7 @@ CREATE TABLE posee (
 
 -- Crear la tabla 'trabaja'
 CREATE TABLE trabaja (
-    Cedula INT,
+    CodigoAbogado INT,
     CodigoContrato INT,
     PRIMARY KEY (Cedula, CodigoContrato)
 );
@@ -152,7 +152,7 @@ ALTER TABLE posee
 
 ALTER TABLE trabaja
     ADD CONSTRAINT fk_trabaja_abogado
-    FOREIGN KEY (Cedula) REFERENCES abogado(Cedula)
+    FOREIGN KEY (CodigoAbogado) REFERENCES abogado(CodigoAbogado)
     ON DELETE CASCADE,
     ADD CONSTRAINT fk_trabaja_contrato
     FOREIGN KEY (CodigoContrato) REFERENCES contrato(codigoContrato)
