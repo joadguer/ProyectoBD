@@ -153,12 +153,12 @@ def eliminar_abogado(cedula, usuario, clave):
 
 
 # Función para insertar un nuevo pago
-def insertar_pago(codigoPago, codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
+def insertar_pago( codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarPago', [codigoPago, codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion])
+            cursor.callproc('InsertarPago', [codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion])
             connection.commit()
             print("Pago insertado exitosamente")
         except Error as e:
@@ -214,12 +214,12 @@ def consultar_pagos_por_demanda(codigoDemanda):
             connection.close()
 
 # Función para insertar un nuevo contrato
-def insertar_contrato(codigoContrato, codigoPago, estadoGeneral, descripcion):
+def insertar_contrato(codigoPago, estadoGeneral, descripcion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarContrato', [codigoContrato, codigoPago, estadoGeneral, descripcion])
+            cursor.callproc('InsertarContrato', [ codigoPago, estadoGeneral, descripcion])
             connection.commit()
             print("Contrato insertado exitosamente")
         except Error as e:
@@ -275,12 +275,12 @@ def consultar_contratos_por_pago(codigoPago):
             connection.close()
 
 # Función para insertar una nueva demanda
-def insertar_demanda(CodigoDemanda, codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio):
+def insertar_demanda( codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarDemanda', [CodigoDemanda, codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio])
+            cursor.callproc('InsertarDemanda', [ codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio])
             connection.commit()
             print("Demanda insertada exitosamente")
         except Error as e:
@@ -336,12 +336,12 @@ def consultar_demandas_por_contrato(codigoContrato):
             connection.close()
 
 # Función para insertar una nueva área
-def insertar_area(CodigoArea, Nombre, Descripcion, TipoDeProceso):
+def insertar_area( Nombre, Descripcion, TipoDeProceso):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarArea', [CodigoArea, Nombre, Descripcion, TipoDeProceso])
+            cursor.callproc('InsertarArea', [ Nombre, Descripcion, TipoDeProceso])
             connection.commit()
             print("Área insertada exitosamente")
         except Error as e:
@@ -397,12 +397,12 @@ def consultar_areas():
             connection.close()
 
 # Función para insertar una nueva etapa
-def insertar_etapa(CodigoEtapa, Descripcion, FechaInicio, FechaFin, Estado, Nombre):
+def insertar_etapa( Descripcion, FechaInicio, FechaFin, Estado, Nombre):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarEtapa', [CodigoEtapa, Descripcion, FechaInicio, FechaFin, Estado, Nombre])
+            cursor.callproc('InsertarEtapa', [ Descripcion, FechaInicio, FechaFin, Estado, Nombre])
             connection.commit()
             print("Etapa insertada exitosamente")
         except Error as e:
