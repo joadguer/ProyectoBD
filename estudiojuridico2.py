@@ -4,6 +4,7 @@ import json
 import os
 import dbconnections as dbc
 from mysql.connector import Error
+from tkcalendar import DateEntry
 
 connection = dbc.create_connection()
 
@@ -30,10 +31,6 @@ def cargar_clientes():
             connection.close()
 
 
-
-
-
-
 # Función para verificar el inicio de sesión
 def verificar_login():
     usuario = entry_usuario.get()
@@ -46,6 +43,111 @@ def verificar_login():
     else:
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
+
+def agregar_demanda():
+
+    global cliente_id
+        
+    def guardar_cliente():
+            global cliente_id
+            tipo_cliente = tipo_cliente_var.get()
+            correo = entry_correo.get()
+            nombre = entry_nombre.get()
+            apellido_paterno = entry_apellido_paterno.get()
+            apellido_materno = entry_apellido_materno.get()
+            fecha_nacimiento = entry_fecha_nacimiento.get()
+            telefono = entry_telefono.get()
+
+            if tipo_cliente == "Natural":
+                estado_civil = entry_estado_civil.get()
+                profesion = entry_profesion.get()
+                cedula = entry_cedula.get()
+                cliente_id=dbc.insertar_persona_natural()
+            else:
+                tipo_sociedad = entry_tipo_sociedad.get()
+                sector_actividad = entry_sector_actividad.get()
+                ruc = entry_ruc.get()
+                cliente_id=dbc.insertar_persona_juridica()
+
+            messagebox.showinfo("Éxito", "Cliente agregado correctamente")
+            agregar_cliente_window.destroy()
+
+    agregar_cliente_window = tk.Toplevel(agregar_caso_window)
+    agregar_cliente_window.title("Agregar Cliente")
+        
+    tk.Label(agregar_cliente_window, text="Tipo de Cliente:").pack(pady=5)
+    tipo_cliente_var = tk.StringVar(value="Natural")
+    tk.Radiobutton(agregar_cliente_window, text="Natural", variable=tipo_cliente_var, value="Natural").pack()
+    tk.Radiobutton(agregar_cliente_window, text="Jurídico", variable=tipo_cliente_var, value="Jurídico").pack()
+        
+    tk.Label(agregar_cliente_window, text="Correo:").pack(pady=5)
+    entry_correo = tk.Entry(agregar_cliente_window)
+    entry_correo.pack()
+        
+    tk.Label(agregar_cliente_window, text="Nombre:").pack(pady=5)
+    entry_nombre = tk.Entry(agregar_cliente_window)
+    entry_nombre.pack()
+        
+    tk.Label(agregar_cliente_window, text="Apellido Paterno:").pack(pady=5)
+    entry_apellido_paterno = tk.Entry(agregar_cliente_window)
+    entry_apellido_paterno.pack()
+        
+    tk.Label(agregar_cliente_window, text="Apellido Materno:").pack(pady=5)
+    entry_apellido_materno = tk.Entry(agregar_cliente_window)
+    entry_apellido_materno.pack()
+        
+    tk.Label(agregar_cliente_window, text="Fecha de Nacimiento:").pack(pady=5)
+    entry_fecha_nacimiento = DateEntry(agregar_cliente_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
+                           foreground='black', borderwidth=2)
+    entry_fecha_nacimiento.pack()
+        
+    tk.Label(agregar_cliente_window, text="Teléfono:").pack(pady=5)
+    entry_telefono = tk.Entry(agregar_cliente_window)
+    entry_telefono.pack()
+        
+    # Campos adicionales para cliente natural
+    natural_frame = tk.Frame(agregar_cliente_window)
+    tk.Label(natural_frame, text="Estado Civil:").pack(pady=5)
+    entry_estado_civil = tk.Entry(natural_frame)
+    entry_estado_civil.pack()
+        
+    tk.Label(natural_frame, text="Profesión:").pack(pady=5)
+    entry_profesion = tk.Entry(natural_frame)
+    entry_profesion.pack()
+        
+    tk.Label(natural_frame, text="Cédula:").pack(pady=5)
+    entry_cedula = tk.Entry(natural_frame)
+    entry_cedula.pack()
+        
+    # Campos adicionales para cliente jurídico
+    juridico_frame = tk.Frame(agregar_cliente_window)
+    tk.Label(juridico_frame, text="Tipo de Sociedad:").pack(pady=5)
+    entry_tipo_sociedad = tk.Entry(juridico_frame)
+    entry_tipo_sociedad.pack()
+        
+    tk.Label(juridico_frame, text="Sector de Actividad:").pack(pady=5)
+    entry_sector_actividad = tk.Entry(juridico_frame)
+    entry_sector_actividad.pack()
+        
+    tk.Label(juridico_frame, text="RUC:").pack(pady=5)
+    entry_ruc = tk.Entry(juridico_frame)
+    entry_ruc.pack()
+        
+    def mostrar_campos_cliente(*args):
+            if tipo_cliente_var.get() == "Natural":
+                juridico_frame.pack_forget()
+                natural_frame.pack(pady=10)
+            else:
+                natural_frame.pack_forget()
+                juridico_frame.pack(pady=10)
+        
+    tipo_cliente_var.trace("w", mostrar_campos_cliente)
+    mostrar_campos_cliente()
+        
+    tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)    
+
+    agregar_caso_window = tk.Toplevel(root)
+    agregar_caso_window.title("Agregar Caso")
 
 
 # Crear ventana principal

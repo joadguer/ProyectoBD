@@ -17,6 +17,26 @@ def create_connection():
         print(f"Error al conectar a la base de datos: {e}")
         return None
 
+#Insertar persona juridica
+def insertar_persona_juridica(identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                              fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc):
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.callproc('InsertarPersonaJuridica', [
+                identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc
+            ])
+            connection.commit()
+            print("Persona jurídica insertada exitosamente.")
+        except Error as e:
+            print(f"Error al insertar persona jurídica: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+            
+
 # Función para obtener todos los clientes
 def obtener_clientesJuridicos():
     connection = create_connection()
@@ -39,6 +59,29 @@ def obtener_clientesJuridicos():
             cursor.close()
             connection.close()
             return []
+        
+
+
+#Insertar persona natural
+def insertar_persona_natural(identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                              fecha_nacimiento, telefono, estado_civil, profesion):
+    connection = create_connection()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.callproc('InsertarPersonaNatural', [
+                identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                fecha_nacimiento, telefono, estado_civil, profesion
+            ])
+            connection.commit()
+            print("Persona natural insertada exitosamente.")
+        except Error as e:
+            print(f"Error al insertar persona natural: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
 
 def obtener_clientesNaturales():
     connection = create_connection()
