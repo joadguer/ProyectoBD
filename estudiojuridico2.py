@@ -209,12 +209,13 @@ def agregar_demanda():
     
     def agregar_pago():
 
-        global 
+        global pago_id
         def guardar_pago():
+            global_id
             monto = entry_monto_pago.get()
             metodo_pago = metodo_pago_var.get()
             descripcion = entry_descripcion_pago.get("1.0", tk.END).strip()
-
+            #fechapago
             if contrato_id:  # Verificar que el contrato_id esté disponible
                 try:
                     dbc.guardar_pago(monto, metodo_pago, descripcion, contrato_id)
