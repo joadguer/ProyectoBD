@@ -516,7 +516,7 @@ obtener_monto_por_pago(1)
 
 
 
-def ejecutar_stored_procedure():
+def obtener_datos_casos():
     try:
         # Conecta a la base de datos
         connection = create_connection()
@@ -546,6 +546,6 @@ def ejecutar_stored_procedure():
             connection.close()
 
 # Llama a la función
-ejecutar_stored_procedure()
+obtener_datos_casos()
 
 
