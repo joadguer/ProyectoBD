@@ -78,7 +78,8 @@ CREATE TABLE personaJuridica (
 
 -- Crear la tabla 'abogado'
 CREATE TABLE abogado (
-    Cedula INT PRIMARY KEY,
+    CodigoAbogado INT AUTO_INCREMENT PRIMARY KEY,
+    Cedula INT UNIQUE,
     Nombre VARCHAR(255),
     ApellidoP VARCHAR(255),
     ApellidoM VARCHAR(255),
