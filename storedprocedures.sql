@@ -206,6 +206,7 @@ BEGIN
     SELECT * FROM etapa;
 END $$
 
+
 -- Insertar una nueva persona natural
 CREATE PROCEDURE InsertarPersonaNatural(
     IN p_CorreoElectronico VARCHAR(255),
@@ -323,3 +324,4 @@ END $$
 
 -- Restaurar el delimitador predeterminado
 DELIMITER ;
+

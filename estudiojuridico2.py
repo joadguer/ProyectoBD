@@ -51,7 +51,7 @@ def verificar_login():
 
 def agregar_demanda():
 
-    global cliente_id
+    global cliente_id,abogado_id
 
     def agregar_cliente():
 
@@ -153,7 +153,57 @@ def agregar_demanda():
         tipo_cliente_var.trace("w", mostrar_campos_cliente)
         mostrar_campos_cliente()
 
-        tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)    
+        tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)   
+
+
+    def agregar_abogado():
+        
+        global abogado_id
+
+        def guardar_abogado():
+            global abogado_id
+            cedula = entry_cedula_abogado.get()
+            nombre = entry_nombre_abogado.get()
+            apellido_paterno = entry_apellido_paterno_abogado.get()
+            apellido_materno = entry_apellido_materno_abogado.get()
+            fecha_nacimiento = entry_fecha_nacimiento_abogado.get()
+            area_enfoque = entry_area_enfoque.get()
+
+            # Guardar en la base de datos
+            abogado_id=dbc.insertar_abogado(cedula,nombre,apellido_paterno,apellido_materno,fecha_nacimiento,area_enfoque)
+            messagebox.showinfo("Éxito", "Abogado agregado correctamente")
+            agregar_abogado_window.destroy()
+
+        agregar_abogado_window = tk.Toplevel(agregar_caso_window)
+        agregar_abogado_window.title("Agregar Abogado")
+                
+        tk.Label(agregar_abogado_window, text="Cédula:").pack(pady=5)
+        entry_cedula_abogado = tk.Entry(agregar_abogado_window)
+        entry_cedula_abogado.pack()
+            
+        tk.Label(agregar_abogado_window, text="Nombre:").pack(pady=5)
+        entry_nombre_abogado = tk.Entry(agregar_abogado_window)
+        entry_nombre_abogado.pack()
+            
+        tk.Label(agregar_abogado_window, text="Apellido Paterno:").pack(pady=5)
+        entry_apellido_paterno_abogado = tk.Entry(agregar_abogado_window)
+        entry_apellido_paterno_abogado.pack()
+            
+        tk.Label(agregar_abogado_window, text="Apellido Materno:").pack(pady=5)
+        entry_apellido_materno_abogado = tk.Entry(agregar_abogado_window)
+        entry_apellido_materno_abogado.pack()
+            
+        tk.Label(agregar_abogado_window, text="Fecha de Nacimiento:").pack(pady=5)
+        entry_fecha_nacimiento_abogado = DateEntry(agregar_abogado_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                    foreground='black', borderwidth=2)
+        entry_fecha_nacimiento_abogado.pack()
+
+        tk.Label(agregar_abogado_window, text="Área de Enfoque:").pack(pady=5)
+        entry_area_enfoque = tk.Entry(agregar_abogado_window)
+        entry_area_enfoque.pack()
+
+        tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
+
 
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
@@ -221,7 +271,7 @@ def agregar_demanda():
     botones_frame.pack(pady=20)
 
     btn_agregar_cliente = tk.Button(botones_frame, text="Agregar Cliente",command=agregar_cliente)
-    btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado" )
+    btn_agregar_abogado = tk.Button(botones_frame, text="Agregar Abogado",command=agregar_abogado)
     btn_agregar_contrato = tk.Button(botones_frame, text="Agregar Contrato")
     btn_guardar_caso = tk.Button(botones_frame, text="Guardar Caso" )
 
@@ -229,6 +279,7 @@ def agregar_demanda():
     btn_agregar_abogado.grid(row=0, column=1, padx=10)
     btn_agregar_contrato.grid(row=0, column=2, padx=10)
     btn_guardar_caso.grid(row=0, column=3, padx=10)
+
 
 # Crear ventana principal
 root = tk.Tk()
