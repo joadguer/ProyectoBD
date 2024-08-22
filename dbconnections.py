@@ -146,8 +146,8 @@ def actualizar_abogado(cedula, nombre, apellido_m, apellido_p, fecha_nacimiento,
         finally:
             cursor.close()
             connection.close()
-def eliminar_abogado(cedula, usuario, clave):
-    connection = create_connection(usuario, clave)
+def eliminar_abogado(cedula):
+    connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
