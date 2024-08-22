@@ -20,6 +20,7 @@ def cargar_clientes():
             
             # Recupera todos los resultados de la consulta
             return clientes
+        
     
     except Error as e:
         print(f"Error al conectar a la base de datos: {e}")
