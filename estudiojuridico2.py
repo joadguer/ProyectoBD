@@ -360,7 +360,7 @@ def agregar_demanda():
             dbc.insertar_posee()
 
             # relaciona abogado y contraro
-            dbc.insertar_trabaja
+            dbc.insertar_trabaja()
             agregardatostabla()
             agregar_caso_window.destroy()
         except Exception as e:
@@ -517,7 +517,7 @@ def borrar_caso():
 
 # Botones para agregar, editar, borrar casos
 tk.Button(main_frame, text="Agregar Caso",command=agregar_demanda).pack(side="left", padx=10)
-tk.Button(main_frame, text="Editar Caso", command=lambda: print("Editar caso")).pack(side="left", padx=10)
+# tk.Button(main_frame, text="Editar Caso", command=lambda: print("Editar caso")).pack(side="left", padx=10)
 tk.Button(main_frame, text="Borrar Caso", command=borrar_caso).pack(side="left", padx=10)
 
 tk.mainloop()
