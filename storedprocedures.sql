@@ -5,8 +5,6 @@ DELIMITER $$
 
 -- Insertar un nuevo pago
 CREATE PROCEDURE InsertarPago(
-    IN p_codigoPago INT,
-    IN p_codigoDemanda INT,
     IN p_metodoDePago VARCHAR(255),
     IN p_fecha DATE,
     IN p_monto DECIMAL(10, 2),
@@ -14,8 +12,8 @@ CREATE PROCEDURE InsertarPago(
     IN p_descripcion TEXT
 )
 BEGIN
-    INSERT INTO pago (codigoPago, codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion)
-    VALUES (p_codigoPago, p_codigoDemanda, p_metodoDePago, p_fecha, p_monto, p_concepto, p_descripcion);
+    INSERT INTO pago ( codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion)
+    VALUES (p_codigoDemanda, p_metodoDePago, p_fecha, p_monto, p_concepto, p_descripcion);
 END $$
 
 -- Actualizar un pago existente
@@ -48,14 +46,13 @@ END $$
 
 -- Insertar un nuevo contrato
 CREATE PROCEDURE InsertarContrato(
-    IN p_codigoContrato INT,
     IN p_codigoPago INT,
     IN p_estadoGeneral VARCHAR(255),
     IN p_descripcion TEXT
 )
 BEGIN
-    INSERT INTO contrato (codigoContrato, codigoPago, estadoGeneral, descripcion)
-    VALUES (p_codigoContrato, p_codigoPago, p_estadoGeneral, p_descripcion);
+    INSERT INTO contrato ( codigoPago, estadoGeneral, descripcion)
+    VALUES (p_codigoPago, p_estadoGeneral, p_descripcion);
 END $$
 
 -- Actualizar un contrato existente
@@ -85,7 +82,6 @@ END $$
 
 -- Insertar una nueva demanda
 CREATE PROCEDURE InsertarDemanda(
-    IN p_CodigoDemanda INT,
     IN p_codigoContrato INT,
     IN p_EstadoDeProceso VARCHAR(255),
     IN p_descripcion TEXT,
@@ -95,8 +91,8 @@ CREATE PROCEDURE InsertarDemanda(
     IN p_EstadoDeJuicio VARCHAR(255)
 )
 BEGIN
-    INSERT INTO demanda (CodigoDemanda, codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio)
-    VALUES (p_CodigoDemanda, p_codigoContrato, p_EstadoDeProceso, p_descripcion, p_FechaInicio, p_FechaFin, p_Audiencia, p_EstadoDeJuicio);
+    INSERT INTO demanda (codigoContrato, EstadoDeProceso, descripcion, FechaInicio, FechaFin, Audiencia, EstadoDeJuicio)
+    VALUES (p_codigoContrato, p_EstadoDeProceso, p_descripcion, p_FechaInicio, p_FechaFin, p_Audiencia, p_EstadoDeJuicio);
 END $$
 
 -- Actualizar una demanda existente
@@ -130,14 +126,13 @@ END $$
 
 -- Insertar una nueva área
 CREATE PROCEDURE InsertarArea(
-    IN p_CodigoArea INT,
     IN p_Nombre VARCHAR(255),
     IN p_Descripcion TEXT,
     IN p_TipoDeProceso VARCHAR(255)
 )
 BEGIN
-    INSERT INTO area (CodigoArea, Nombre, Descripcion, TipoDeProceso)
-    VALUES (p_CodigoArea, p_Nombre, p_Descripcion, p_TipoDeProceso);
+    INSERT INTO area ( Nombre, Descripcion, TipoDeProceso)
+    VALUES ( p_Nombre, p_Descripcion, p_TipoDeProceso);
 END $$
 
 -- Actualizar un área existente
@@ -167,7 +162,6 @@ END $$
 
 -- Insertar una nueva etapa
 CREATE PROCEDURE InsertarEtapa(
-    IN p_CodigoEtapa INT,
     IN p_Descripcion TEXT,
     IN p_FechaInicio DATE,
     IN p_FechaFin DATE,
@@ -175,8 +169,8 @@ CREATE PROCEDURE InsertarEtapa(
     IN p_Nombre VARCHAR(255)
 )
 BEGIN
-    INSERT INTO etapa (CodigoEtapa, Descripcion, FechaInicio, FechaFin, Estado, Nombre)
-    VALUES (p_CodigoEtapa, p_Descripcion, p_FechaInicio, p_FechaFin, p_Estado, p_Nombre);
+    INSERT INTO etapa ( Descripcion, FechaInicio, FechaFin, Estado, Nombre)
+    VALUES (p_Descripcion, p_FechaInicio, p_FechaFin, p_Estado, p_Nombre);
 END $$
 
 -- Actualizar una etapa existente
@@ -261,7 +255,6 @@ END $$
 
 
 CREATE PROCEDURE InsertarPersonaJuridica(
-    IN p_IdentificadorCliente INT,
     IN p_CorreoElectronico VARCHAR(255),
     IN p_Nombre VARCHAR(255),
     IN p_ApellidoP VARCHAR(255),
@@ -274,10 +267,10 @@ CREATE PROCEDURE InsertarPersonaJuridica(
 )
 BEGIN
     INSERT INTO personaJuridica (
-        IdentificadorCliente, CorreoElectronico, Nombre, ApellidoP, ApellidoM, FechaNacimiento, Telefono, TipoDeSociedad, SectorDeActividad, RUC
+         CorreoElectronico, Nombre, ApellidoP, ApellidoM, FechaNacimiento, Telefono, TipoDeSociedad, SectorDeActividad, RUC
     )
     VALUES (
-        p_IdentificadorCliente,p_CorreoElectronico,p_Nombre,p_ApellidoP,p_ApellidoM,p_FechaNacimiento,p_Telefono,p_TipoDeSociedad,p_SectorDeActividad,p_RUC
+        p_CorreoElectronico,p_Nombre,p_ApellidoP,p_ApellidoM,p_FechaNacimiento,p_Telefono,p_TipoDeSociedad,p_SectorDeActividad,p_RUC
     );
 END $$
 
