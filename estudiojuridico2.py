@@ -73,8 +73,8 @@ def agregar_demanda():
                 tipo_cliente = tipo_cliente_var.get()
                 correo = entry_correo.get()
                 nombre = entry_nombre.get()
-                apellido_paterno = entry_apellido_paterno.get()
-                apellido_materno = entry_apellido_materno.get()
+                apellido_p = entry_apellido_paterno.get()
+                apellido_m = entry_apellido_materno.get()
                 fecha_nacimiento = entry_fecha_nacimiento.get()
                 telefono = entry_telefono.get()
 
@@ -82,12 +82,14 @@ def agregar_demanda():
                     estado_civil = entry_estado_civil.get()
                     profesion = entry_profesion.get()
                     cedula = entry_cedula.get()
-                    cliente_id=dbc.insertar_persona_natural()
+                    cliente_id=dbc.insertar_persona_natural(correo, nombre, apellido_p, apellido_m,
+                              fecha_nacimiento, telefono, estado_civil, profesion)
                 else:
                     tipo_sociedad = entry_tipo_sociedad.get()
                     sector_actividad = entry_sector_actividad.get()
                     ruc = entry_ruc.get()
-                    cliente_id=dbc.insertar_persona_juridica()
+                    cliente_id=dbc.insertar_persona_juridica(correo, nombre, apellido_p, apellido_m,
+                              fecha_nacimiento, telefono, tipo_sociedad, sector_actividad, ruc)
 
                 messagebox.showinfo("Éxito", "Cliente agregado correctamente")
                 agregar_cliente_window.destroy()

@@ -208,7 +208,6 @@ END $$
 
 -- Insertar una nueva persona natural
 CREATE PROCEDURE InsertarPersonaNatural(
-    IN p_IdentificadorCliente INT,
     IN p_CorreoElectronico VARCHAR(255),
     IN p_Nombre VARCHAR(255),
     IN p_ApellidoP VARCHAR(255),

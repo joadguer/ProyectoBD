@@ -18,14 +18,14 @@ def create_connection(usuario, clave):
         return None
 
 #Insertar persona juridica
-def insertar_persona_juridica(identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+def insertar_persona_juridica( correo_electronico, nombre, apellido_p, apellido_m,
                               fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
             cursor.callproc('InsertarPersonaJuridica', [
-                identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                 correo_electronico, nombre, apellido_p, apellido_m,
                 fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc
             ])
             connection.commit()
@@ -63,14 +63,14 @@ def obtener_clientesJuridicos():
 
 
 #Insertar persona natural
-def insertar_persona_natural(identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+def insertar_persona_natural(correo_electronico, nombre, apellido_p, apellido_m,
                               fecha_nacimiento, telefono, estado_civil, profesion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
             cursor.callproc('InsertarPersonaNatural', [
-                identificador_cliente, correo_electronico, nombre, apellido_p, apellido_m,
+                 correo_electronico, nombre, apellido_p, apellido_m,
                 fecha_nacimiento, telefono, estado_civil, profesion
             ])
             connection.commit()
