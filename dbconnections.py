@@ -162,19 +162,29 @@ def eliminar_abogado(cedula, usuario, clave):
 
 
 # Función para insertar un nuevo pago
-def insertar_pago( codigoContrato, metodoDePago, fecha, monto, descripcion):
+def insertar_pago(codigoContrato, metodoDePago, fecha, monto, descripcion):
     connection = create_connection()
+    pago_id = None
     if connection:
         try:
             cursor = connection.cursor()
+            # Ejecutar el procedimiento almacenado para insertar el pago
             cursor.callproc('InsertarPago', [codigoContrato, metodoDePago, fecha, monto, descripcion])
             connection.commit()
-            print("Pago insertado exitosamente")
+            
+            # Obtener el ID generado para el pago
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            pago_id = cursor.fetchone()[0]
+            print(f"Pago insertado exitosamente con ID: {pago_id}")
+            
         except Error as e:
             print(f"Error al insertar pago: {e}")
         finally:
             cursor.close()
             connection.close()
+            
+    return pago_id
+
 
 # Función para actualizar un pago existente
 def actualizar_pago(codigoPago, codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
