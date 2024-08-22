@@ -2,12 +2,12 @@ import mysql.connector
 from mysql.connector import Error
 
 # Configura la conexión a la base de datos
-def create_connection(usuario, clave):
+def create_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            user= usuario,  
-            password= clave,  
+            user= 'usuarioprincipal',  
+            password= '1',  
             database='EstudioJuridicoDB'
         )
         if connection.is_connected():
@@ -16,7 +16,7 @@ def create_connection(usuario, clave):
     except Error as e:
         print(f"Error al conectar a la base de datos: {e}")
         return None
-
+        
 #Insertar persona juridica
 def insertar_persona_juridica( correo_electronico, nombre, apellido_p, apellido_m,
                               fecha_nacimiento, telefono, tipo_de_sociedad, sector_de_actividad, ruc):
