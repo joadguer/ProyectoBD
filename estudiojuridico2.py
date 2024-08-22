@@ -337,6 +337,7 @@ def agregar_demanda():
         etapa = combobox_etapa.get()
         estado = estado_var.get()
 
+
         if not cliente_id:
             messagebox.showerror("Error", "Debe agregar un cliente antes de guardar el caso.")
             return
@@ -348,10 +349,12 @@ def agregar_demanda():
             dbc.insertar_demanda(contrato_id, descripcion, fechaInicio, fechaFin, area, etapa,estado,Monto=100 )
             messagebox.showinfo("Éxito", "Caso guardado correctamente")
             # relaciona area con la demanda
+            dbc.insertar_area( area, descripcion, etapa)
             dbc.insertar_pertenencia()
 
             # relacionar area con etapa
-            # dbc.insertar_tener()
+            dbc.insertar_etapa( descripcion, fechaInicio, fechaFin, estado, etapa)
+            dbc.insertar_tener()
 
             # para relacionar el cliente con la demanda
             dbc.insertar_posee()
@@ -515,6 +518,6 @@ def borrar_caso():
 # Botones para agregar, editar, borrar casos
 tk.Button(main_frame, text="Agregar Caso",command=agregar_demanda).pack(side="left", padx=10)
 tk.Button(main_frame, text="Editar Caso", command=lambda: print("Editar caso")).pack(side="left", padx=10)
-tk.Button(main_frame, text="Borrar Caso", command=borrar_caso: print("Borrar caso")).pack(side="left", padx=10)
+tk.Button(main_frame, text="Borrar Caso", command=borrar_caso).pack(side="left", padx=10)
 
 tk.mainloop()
