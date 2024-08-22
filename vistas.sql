@@ -38,8 +38,6 @@ CREATE VIEW VistaAbogadosYAreaDeEnfoque AS
 SELECT a.Cedula, a.Nombre, a.ApellidoM, a.ApellidoP, a.FechaNacimiento, a.AreaDeEnfoque
 FROM abogado a;
 
-
-
 -- Índices para la tabla 'pago'
 CREATE INDEX idx_codigoPago ON pago(codigoPago);
 CREATE INDEX idx_codigoDemanda ON pago(codigoDemanda);
