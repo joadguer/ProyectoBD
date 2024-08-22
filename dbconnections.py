@@ -105,6 +105,53 @@ def obtener_clientesNaturales():
             return []
 
 
+#TODOO DE ABOGADOS
+def insertar_abogado(cedula, nombre, apellido_m, apellido_p, fecha_nacimiento, area_enfoque):
+  connection= create_connection()
+  if connection:
+        try:
+          cursor = connection.cursor()
+          cursor.callproc('InsertarAbogado', [
+          cedula, nombre, apellido_m, apellido_p, fecha_nacimiento, area_enfoque])
+          connection.commit()
+          print("Abogado insertada exitosamente.")
+        except Error as e:
+          print(f"Error al insertar Abogado: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
+def actualizar_abogado(cedula, nombre, apellido_m, apellido_p, fecha_nacimiento, area_enfoque, usuario, clave):
+    connection = create_connection(usuario, clave)
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.callproc('ActualizarAbogado', [
+                cedula, nombre, apellido_m, apellido_p, fecha_nacimiento, area_enfoque
+            ])
+            connection.commit()
+            print("Abogado actualizado exitosamente.")
+        except Error as e:
+            print(f"Error al actualizar abogado: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+def eliminar_abogado(cedula, usuario, clave):
+    connection = create_connection(usuario, clave)
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.callproc('EliminarAbogado', [cedula])
+            connection.commit()
+            print("Abogado eliminado exitosamente.")
+        except Error as e:
+            print(f"Error al eliminar abogado: {e}")
+        finally:
+            cursor.close()
+            connection.close()
+
+
 # Función para insertar un nuevo pago
 def insertar_pago(codigoPago, codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
     connection = create_connection()
