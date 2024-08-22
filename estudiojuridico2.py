@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import json
 import os
+from tkinter import filedialog
 import dbconnections as dbc
 from mysql.connector import Error
 from tkcalendar import DateEntry
@@ -204,7 +205,44 @@ def agregar_demanda():
         entry_area_enfoque.pack()
 
         tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
+    
+    def agregar_contrato(): 
+        
+        global contrato_id
+        agregar_contrato_window = tk.Toplevel(agregar_caso_window)
+        agregar_contrato_window.title("Agregar Contrato")
+        pdf_contenido = None 
+        def limitarcaract(event):
+            if len(entry_descripcion_contrato.get("1.0",tk.END))>150:
+                entry_descripcion_contrato.delete("1.150",tk.END)
 
+
+        def guardar_contrato():
+            global contrato_id
+            descripcion= entry_descripcion.get("1.0", tk.END).strip() 
+            fecha = entry_fecha_contrato.get()
+
+            if pdf_contenido:
+                contrato_id = dbc.insertar_contrato(descripcion)
+                messagebox.showinfo("Éxito", "Contrato guardado correctamente")
+                agregar_contrato_window.destroy()
+                agregar_pago(contrato_id)
+                agregar_contrato_window.destroy()
+            else:
+                messagebox.showerror("Error","Debe seleccionar un archivo PDF")
+
+        tk.Label(agregar_contrato_window, text="Descripcion:").pack(pady=5)
+        entry_descripcion_contrato = tk.Text(agregar_contrato_window,width=50,height=10)
+        entry_descripcion_contrato.pack()
+        entry_descripcion_contrato.bind("<KeyRelease>", limitarcaract)
+    
+        tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
+        entry_fecha_contrato = DateEntry(agregar_contrato_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
+                            foreground='black', borderwidth=2)
+        entry_fecha_contrato.pack()
+
+        tk.Button(agregar_contrato_window, text="Seleccionar PDF").pack(pady=10)
+        tk.Button(agregar_contrato_window, text="Guardar Contrato",command=guardar_contrato).pack(pady=20)
 
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
