@@ -493,8 +493,7 @@ def consultar_etapas():
             cursor.close()
             connection.close()
 
-import mysql.connector
-from mysql.connector import Error
+
 
 def obtener_monto_por_pago(codigoPago):
     try:
@@ -641,3 +640,5 @@ def insertar_trabaja():
         finally:
             cursor.close()
             connection.close()
+
+

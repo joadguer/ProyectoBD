@@ -18,11 +18,11 @@ def cargar_clientes():
             clientesJuridicos = dbc.obtener_clientesJuridicos()
 
             clientes = clientesJuridicos + clientesNaturales
-            
+
             # Recupera todos los resultados de la consulta
             return clientes
-        
-    
+
+
     except Error as e:
         print(f"Error al conectar a la base de datos: {e}")
         return []
@@ -43,7 +43,7 @@ areas_y_etapas = {
 def verificar_login():
     usuario = entry_usuario.get()
     contraseña = entry_contraseña.get()
-    
+
     if usuario == "usuarioprincipal" and contraseña == "1":
         login_frame.pack_forget()
         main_frame.pack(fill="both", expand=True)
@@ -58,16 +58,16 @@ def agregardatostabla():
     casos= dbc.obtener_datos_casos()
     for caso in casos:
         tabla_casos.insert("", "end", values=(
-        caso["id"], 
-        f'{caso["cliente_nombre"]} {caso["cliente_apellido"]}', 
-        caso["descripcion"], 
-        caso["etapa"], 
-        caso["estado"], 
-        f'{caso["abogado_nombre"]} {caso["abogado_apellido"]}', 
-        caso["fechaInicio"], 
-        caso["fechaFin"], 
+        caso["id"],
+        f'{caso["cliente_nombre"]} {caso["cliente_apellido"]}',
+        caso["descripcion"],
+        caso["etapa"],
+        caso["estado"],
+        f'{caso["abogado_nombre"]} {caso["abogado_apellido"]}',
+        caso["fechaInicio"],
+        caso["fechaFin"],
         caso["area"],
-        caso["contrato_id"], 
+        caso["contrato_id"],
         caso["monto"]
     ))
 
@@ -177,11 +177,11 @@ def agregar_demanda():
         tipo_cliente_var.trace("w", mostrar_campos_cliente)
         mostrar_campos_cliente()
 
-        tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)   
+        tk.Button(agregar_cliente_window, text="Guardar Cliente", command=guardar_cliente).pack(pady=20)
 
 
     def agregar_abogado():
-        
+
         global abogado_id
 
         def guardar_abogado():
@@ -200,23 +200,23 @@ def agregar_demanda():
 
         agregar_abogado_window = tk.Toplevel(agregar_caso_window)
         agregar_abogado_window.title("Agregar Abogado")
-                
+
         tk.Label(agregar_abogado_window, text="Cédula:").pack(pady=5)
         entry_cedula_abogado = tk.Entry(agregar_abogado_window)
         entry_cedula_abogado.pack()
-            
+
         tk.Label(agregar_abogado_window, text="Nombre:").pack(pady=5)
         entry_nombre_abogado = tk.Entry(agregar_abogado_window)
         entry_nombre_abogado.pack()
-            
+
         tk.Label(agregar_abogado_window, text="Apellido Paterno:").pack(pady=5)
         entry_apellido_paterno_abogado = tk.Entry(agregar_abogado_window)
         entry_apellido_paterno_abogado.pack()
-            
+
         tk.Label(agregar_abogado_window, text="Apellido Materno:").pack(pady=5)
         entry_apellido_materno_abogado = tk.Entry(agregar_abogado_window)
         entry_apellido_materno_abogado.pack()
-            
+
         tk.Label(agregar_abogado_window, text="Fecha de Nacimiento:").pack(pady=5)
         entry_fecha_nacimiento_abogado = DateEntry(agregar_abogado_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
                     foreground='black', borderwidth=2)
@@ -226,9 +226,9 @@ def agregar_demanda():
         entry_area_enfoque = tk.Entry(agregar_abogado_window)
         entry_area_enfoque.pack()
 
-        tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
+        tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20)
 
-    
+
     def agregar_contrato():
 
         global contrato_id
@@ -286,7 +286,7 @@ def agregar_demanda():
             fecha_pago = entry_fecha_pago.get()
 
             # Verificar que el contrato_id esté disponible
-            if contrato_id:  
+            if contrato_id:
                 try:
                     # Guardar el pago en la base de datos
                     pago_id=dbc.insertar_pago(contrato_id,metodo_pago, fecha_pago, monto,  descripcion)
@@ -336,7 +336,7 @@ def agregar_demanda():
         area = combobox_area.get()
         etapa = combobox_etapa.get()
         estado = estado_var.get()
-        
+
         if not cliente_id:
             messagebox.showerror("Error", "Debe agregar un cliente antes de guardar el caso.")
             return
@@ -347,11 +347,22 @@ def agregar_demanda():
         try:
             dbc.insertar_demanda(contrato_id, descripcion, fechaInicio, fechaFin, area, etapa,estado,Monto=100 )
             messagebox.showinfo("Éxito", "Caso guardado correctamente")
+            # relaciona area con la demanda
+            dbc.insertar_pertenencia()
+
+            # relacionar area con etapa
+            # dbc.insertar_tener()
+
+            # para relacionar el cliente con la demanda
+            dbc.insertar_posee()
+
+            # relaciona abogado y contraro
+            dbc.insertar_trabaja
             agregardatostabla()
             agregar_caso_window.destroy()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo guardar el caso: {str(e)}")
-        
+
 
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
@@ -372,7 +383,7 @@ def agregar_demanda():
     combobox_etapa = ttk.Combobox(agregar_caso_window, state="readonly")
     combobox_etapa.pack()
 
-    
+
     tk.Label(agregar_caso_window, text="Estado:").pack(pady=5)
     estado_var = tk.StringVar()
 
@@ -384,15 +395,15 @@ def agregar_demanda():
         ("En proceso", "yellow"),
         ("Finalizado", "red")
     ]
-    
+
     for texto, color in opciones_estado:
         frame_opcion = tk.Frame(frame_estado)
         frame_opcion.pack(anchor='w')
-        
+
         canvas = tk.Canvas(frame_opcion, width=20, height=20, highlightthickness=0)
         canvas.create_oval(2, 2, 18, 18, fill=color, outline=color)
         canvas.pack(side='left')
-        
+
         radio_btn = tk.Radiobutton(frame_opcion, text=texto, variable=estado_var, value=texto)
         radio_btn.pack(side='left')
 
@@ -409,7 +420,7 @@ def agregar_demanda():
     def limitarcaract(event):
         if len(entry_descripcion.get("1.0", tk.END)) > 150:
             entry_descripcion.delete("1.150", tk.END)
-        
+
     tk.Label(agregar_caso_window, text="Descripción:").pack(pady=5)
     entry_descripcion = tk.Text(agregar_caso_window, width=50, height=10)
     entry_descripcion.pack()
@@ -484,10 +495,26 @@ tabla_casos.column("monto", width=100)
 
 # Empaquetar la tabla en el frame principal
 tabla_casos.pack(fill="both", expand=True)
+def borrar_caso():
+    selected_item = tabla_casos.selection()
+    if not selected_item:
+        messagebox.showerror("Error", "Debe seleccionar un caso para eliminar.")
+        return
+
+    caso_id = tabla_casos.item(selected_item, 'values')[0]
+    confirm = messagebox.askyesno("Confirmar Eliminación", f"¿Está seguro de que desea eliminar el caso con ID {caso_id}?")
+
+    if confirm:
+        try:
+            dbc.eliminar_demanda(caso_id)  # Asegúrate de que esta función exista en tu módulo dbc
+            messagebox.showinfo("Éxito", "Caso eliminado correctamente")
+            agregardatostabla()  # Actualiza la tabla para reflejar los cambios
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo eliminar el caso: {str(e)}")
 
 # Botones para agregar, editar, borrar casos
 tk.Button(main_frame, text="Agregar Caso",command=agregar_demanda).pack(side="left", padx=10)
 tk.Button(main_frame, text="Editar Caso", command=lambda: print("Editar caso")).pack(side="left", padx=10)
-tk.Button(main_frame, text="Borrar Caso", command=lambda: print("Borrar caso")).pack(side="left", padx=10)
+tk.Button(main_frame, text="Borrar Caso", command=borrar_caso: print("Borrar caso")).pack(side="left", padx=10)
 
 tk.mainloop()
