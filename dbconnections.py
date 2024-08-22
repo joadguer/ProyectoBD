@@ -153,12 +153,12 @@ def eliminar_abogado(cedula, usuario, clave):
 
 
 # Función para insertar un nuevo pago
-def insertar_pago( codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
+def insertar_pago( codigoContrato, metodoDePago, fecha, monto, descripcion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarPago', [codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion])
+            cursor.callproc('InsertarPago', [codigoContrato, metodoDePago, fecha, monto, descripcion])
             connection.commit()
             print("Pago insertado exitosamente")
         except Error as e:

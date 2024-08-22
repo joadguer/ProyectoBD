@@ -9,12 +9,11 @@ CREATE PROCEDURE InsertarPago(
     IN p_metodoDePago VARCHAR(255),
     IN p_fecha DATE,
     IN p_monto DECIMAL(10, 2),
-    IN p_concepto VARCHAR(255),
     IN p_descripcion TEXT
 )
 BEGIN
-    INSERT INTO pago ( codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion)
-    VALUES (p_codigoDemanda, p_metodoDePago, p_fecha, p_monto, p_concepto, p_descripcion);
+    INSERT INTO pago ( codigoDemanda, metodoDePago, fecha, monto, descripcion)
+    VALUES (p_codigoDemanda, p_metodoDePago, p_fecha, p_monto, p_descripcion);
 END $$
 
 -- Actualizar un pago existente
