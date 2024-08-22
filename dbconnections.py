@@ -153,12 +153,12 @@ def eliminar_abogado(cedula, usuario, clave):
 
 
 # Función para insertar un nuevo pago
-def insertar_pago( codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion):
+def insertar_pago( contrato_id, metodoDePago, fecha, monto, descripcion):
     connection = create_connection()
     if connection:
         try:
             cursor = connection.cursor()
-            cursor.callproc('InsertarPago', [codigoDemanda, metodoDePago, fecha, monto, concepto, descripcion])
+            cursor.callproc('InsertarPago', [contrato_id, metodoDePago, fecha, monto, descripcion])
             connection.commit()
             print("Pago insertado exitosamente")
         except Error as e:
@@ -216,17 +216,28 @@ def consultar_pagos_por_demanda(codigoDemanda):
 # Función para insertar un nuevo contrato
 def insertar_contrato(estadoGeneral, descripcion):
     connection = create_connection()
+    contrato_id = None  # Inicializar contrato_id
+    
     if connection:
         try:
             cursor = connection.cursor()
+            # Llamar al procedimiento almacenado
             cursor.callproc('InsertarContrato', [estadoGeneral, descripcion])
             connection.commit()
-            print("Contrato insertado exitosamente")
+
+            # Obtener el contrato_id del contrato recién insertado
+            cursor.execute("SELECT LAST_INSERT_ID();")
+            contrato_id = cursor.fetchone()[0]
+            
+            print(f"Contrato insertado exitosamente con ID: {contrato_id}")
         except Error as e:
             print(f"Error al insertar contrato: {e}")
         finally:
             cursor.close()
             connection.close()
+    
+    return contrato_id  # Devolver el contrato_id
+
 
 # Función para actualizar un contrato existente
 def actualizar_contrato(codigoContrato, codigoPago, estadoGeneral, descripcion):

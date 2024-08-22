@@ -53,7 +53,7 @@ def verificar_login():
 
 def agregar_demanda():
 
-    global cliente_id,abogado_id
+    global cliente_id,abogado_id,contrato_id
 
     def agregar_cliente():
 
@@ -207,7 +207,51 @@ def agregar_demanda():
         tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
 
     
+    def agregar_contrato():
+        agregar_contrato_window = tk.Toplevel(agregar_caso_window)
+        agregar_contrato_window.title("Agregar Contrato")
+
+        def limitarcaract(event):
+            if len(entry_descripcion_contrato.get("1.0", tk.END)) > 150:
+                entry_descripcion_contrato.delete("1.150", tk.END)
+
+        def guardar_contrato():
+            descripcion = entry_descripcion_contrato.get("1.0", tk.END).strip()
+            estadoGeneral = entry_fecha_contrato.get()
+
+            # Guardar el contrato en la base de datos y obtener contrato_id
+            try:
+                contrato_id = dbc.insertar_contrato(estadoGeneral, descripcion)
+                if contrato_id:
+                    messagebox.showinfo("Éxito", "Contrato guardado correctamente")
+                    agregar_contrato_window.destroy()
+                    # Llamar a agregar_pago y pasar el contrato_id
+                    agregar_pago(contrato_id)
+                else:
+                    raise Exception("No se pudo obtener el ID del contrato")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo guardar el contrato: {e}")
+                print(e)
+
+
+        # Campo para la descripción del contrato
+        tk.Label(agregar_contrato_window, text="Descripción:").pack(pady=5)
+        entry_descripcion_contrato = tk.Text(agregar_contrato_window, width=50, height=10)
+        entry_descripcion_contrato.pack()
+        entry_descripcion_contrato.bind("<KeyRelease>", limitarcaract)
+
+        # Campo para la fecha del contrato
+        tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
+        entry_fecha_contrato = DateEntry(agregar_contrato_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
+                                        foreground='black', borderwidth=2)
+        entry_fecha_contrato.pack()
+
+        # Botón para guardar el contrato
+        tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
+
+
     def agregar_pago(contrato_id):
+
 
         def guardar_pago():
             monto = entry_monto_pago.get()
@@ -219,7 +263,7 @@ def agregar_demanda():
             if contrato_id:  
                 try:
                     # Guardar el pago en la base de datos
-                    dbc.insertar_pago(metodo_pago, fecha_pago, monto, descripcion)
+                    dbc.insertar_pago(contrato_id,metodo_pago, fecha_pago, monto,  descripcion)
                     messagebox.showinfo("Éxito", "Pago guardado correctamente")
                     agregar_pago_window.destroy()
                 except Exception as e:
@@ -257,42 +301,6 @@ def agregar_demanda():
         # Botón para guardar el pago
         tk.Button(agregar_pago_window, text="Guardar Pago", command=guardar_pago).pack(pady=20)
 
-
-    def agregar_contrato():
-        agregar_contrato_window = tk.Toplevel(agregar_caso_window)
-        agregar_contrato_window.title("Agregar Contrato")
-
-        def limitarcaract(event):
-            if len(entry_descripcion_contrato.get("1.0", tk.END)) > 150:
-                entry_descripcion_contrato.delete("1.150", tk.END)
-
-        def guardar_contrato():
-            descripcion = entry_descripcion_contrato.get("1.0", tk.END).strip()
-            estadoGeneral = entry_fecha_contrato.get()
-
-            # Guardar el contrato en la base de datos y obtener contrato_id
-            try:
-                contrato_id = dbc.insertar_contrato(estadoGeneral, descripcion)
-                messagebox.showinfo("Éxito", "Contrato guardado correctamente")
-                agregar_contrato_window.destroy()
-                # Aquí puedes llamar a agregar_pago(contrato_id) si es necesario
-            except Exception as e:
-                messagebox.showerror("Error", f"No se pudo guardar el contrato: {e}")
-
-        # Campo para la descripción del contrato
-        tk.Label(agregar_contrato_window, text="Descripción:").pack(pady=5)
-        entry_descripcion_contrato = tk.Text(agregar_contrato_window, width=50, height=10)
-        entry_descripcion_contrato.pack()
-        entry_descripcion_contrato.bind("<KeyRelease>", limitarcaract)
-
-        # Campo para la fecha del contrato
-        tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
-        entry_fecha_contrato = DateEntry(agregar_contrato_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
-                                        foreground='black', borderwidth=2)
-        entry_fecha_contrato.pack()
-
-        # Botón para guardar el contrato
-        tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
 
 
     agregar_caso_window = tk.Toplevel(root)
@@ -368,7 +376,7 @@ def agregar_demanda():
     btn_agregar_cliente.grid(row=0, column=0, padx=10)
     btn_agregar_abogado.grid(row=0, column=1, padx=10)
     btn_agregar_contrato.grid(row=0, column=2, padx=10)
-    btn_guardar_caso.grid(row=0, column=3, padx=10)
+    btn_guardar_caso.grid(row=0, column=4, padx=10)
 
 
 # Crear ventana principal
