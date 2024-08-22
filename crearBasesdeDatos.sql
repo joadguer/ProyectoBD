@@ -1,4 +1,7 @@
 -- Crear la tabla 'pago'
+drop database  EstudioJuridicoDB;
+create database EstudioJuridicoDB;
+use EstudioJuridicoDB;
 CREATE TABLE pago (
     codigoPago INT AUTO_INCREMENT PRIMARY KEY,
     codigoDemanda INT,
