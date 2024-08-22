@@ -207,18 +207,19 @@ def agregar_demanda():
         tk.Button(agregar_abogado_window, text="Guardar Abogado",command=guardar_abogado).pack(pady=20) 
 
     
-    def agregar_pago():
+    def agregar_pago(contrato_id):
 
-        global pago_id
         def guardar_pago():
-            global_id
             monto = entry_monto_pago.get()
             metodo_pago = metodo_pago_var.get()
             descripcion = entry_descripcion_pago.get("1.0", tk.END).strip()
-            #fechapago
-            if contrato_id:  # Verificar que el contrato_id esté disponible
+            fecha_pago = entry_fecha_pago.get()
+
+            # Verificar que el contrato_id esté disponible
+            if contrato_id:  
                 try:
-                    dbc.guardar_pago(monto, metodo_pago, descripcion, contrato_id)
+                    # Guardar el pago en la base de datos
+                    dbc.insertar_pago(metodo_pago, fecha_pago, monto, descripcion)
                     messagebox.showinfo("Éxito", "Pago guardado correctamente")
                     agregar_pago_window.destroy()
                 except Exception as e:
@@ -226,7 +227,7 @@ def agregar_demanda():
             else:
                 messagebox.showerror("Error", "No se pudo identificar el contrato")
 
-                # Crear la ventana para agregar un pago
+        # Crear la ventana para agregar un pago
         agregar_pago_window = tk.Toplevel()
         agregar_pago_window.title("Agregar Pago")
 
@@ -254,42 +255,45 @@ def agregar_demanda():
         entry_descripcion_pago.pack()
 
         # Botón para guardar el pago
-        tk.Button(agregar_pago_window, text="Guardar Pago", command=lambda:guardar_pago()).pack(pady=20)
+        tk.Button(agregar_pago_window, text="Guardar Pago", command=guardar_pago).pack(pady=20)
 
 
-    
-    def agregar_contrato(pago_id): 
-        
-        global contrato_id
+    def agregar_contrato():
         agregar_contrato_window = tk.Toplevel(agregar_caso_window)
         agregar_contrato_window.title("Agregar Contrato")
-      
-        def limitarcaract(event):
-            if len(entry_descripcion_contrato.get("1.0",tk.END))>150:
-                entry_descripcion_contrato.delete("1.150",tk.END)
 
+        def limitarcaract(event):
+            if len(entry_descripcion_contrato.get("1.0", tk.END)) > 150:
+                entry_descripcion_contrato.delete("1.150", tk.END)
 
         def guardar_contrato():
-            global contrato_id
-            descripcion= entry_descripcion.get("1.0", tk.END).strip() 
-            fecha = entry_fecha_contrato.get()
-            
-            contrato_id = dbc.insertar_contrato(descripcion)
-            messagebox.showinfo("Éxito", "Contrato guardado correctamente")
-            agregar_contrato_window.destroy()
+            descripcion = entry_descripcion_contrato.get("1.0", tk.END).strip()
+            fecha_contrato = entry_fecha_contrato.get()
 
-        tk.Label(agregar_contrato_window, text="Descripcion:").pack(pady=5)
-        entry_descripcion_contrato = tk.Text(agregar_contrato_window,width=50,height=10)
+            # Guardar el contrato en la base de datos y obtener contrato_id
+            try:
+                contrato_id = dbc.insertar_contrato(fecha_contrato, descripcion)
+                messagebox.showinfo("Éxito", "Contrato guardado correctamente")
+                agregar_contrato_window.destroy()
+                # Aquí puedes llamar a agregar_pago(contrato_id) si es necesario
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo guardar el contrato: {e}")
+
+        # Campo para la descripción del contrato
+        tk.Label(agregar_contrato_window, text="Descripción:").pack(pady=5)
+        entry_descripcion_contrato = tk.Text(agregar_contrato_window, width=50, height=10)
         entry_descripcion_contrato.pack()
         entry_descripcion_contrato.bind("<KeyRelease>", limitarcaract)
-    
+
+        # Campo para la fecha del contrato
         tk.Label(agregar_contrato_window, text="Fecha:").pack(pady=5)
-        entry_fecha_contrato = DateEntry(agregar_contrato_window,date_pattern="yyyy-mm-dd",width=12, background='lightblue',
-                            foreground='black', borderwidth=2)
+        entry_fecha_contrato = DateEntry(agregar_contrato_window, date_pattern="yyyy-mm-dd", width=12, background='lightblue',
+                                        foreground='black', borderwidth=2)
         entry_fecha_contrato.pack()
 
+        # Botón para guardar el contrato
+        tk.Button(agregar_contrato_window, text="Guardar Contrato", command=guardar_contrato).pack(pady=20)
 
-        tk.Button(agregar_contrato_window, text="Guardar Contrato",command=guardar_contrato).pack(pady=20)
 
     agregar_caso_window = tk.Toplevel(root)
     agregar_caso_window.title("Agregar Caso")
