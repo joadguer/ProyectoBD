@@ -5,15 +5,15 @@ DELIMITER $$
 
 -- Insertar un nuevo pago
 CREATE PROCEDURE InsertarPago(
-    IN p_codigoDemanda INT,
+    IN p_codigoContrato INT,
     IN p_metodoDePago VARCHAR(255),
     IN p_fecha DATE,
     IN p_monto DECIMAL(10, 2),
     IN p_descripcion TEXT
 )
 BEGIN
-    INSERT INTO pago ( codigoDemanda, metodoDePago, fecha, monto, descripcion)
-    VALUES (p_codigoDemanda, p_metodoDePago, p_fecha, p_monto, p_descripcion);
+    INSERT INTO pago ( codigoContrato, metodoDePago, fecha, monto, descripcion)
+    VALUES (p_codigoContrato, p_metodoDePago, p_fecha, p_monto, p_descripcion);
 END $$
 
 -- Actualizar un pago existente
@@ -48,7 +48,7 @@ CREATE PROCEDURE InsertarContrato(
     IN descripcion TEXT
 )
 BEGIN
-    INSERT INTO Contratos (estadoGeneral, descripcion) 
+    INSERT INTO contrato (estadoGeneral, descripcion) 
     VALUES (estadoGeneral, descripcion);
     
     SELECT LAST_INSERT_ID() AS contrato_id;
