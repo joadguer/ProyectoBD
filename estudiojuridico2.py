@@ -38,36 +38,38 @@ areas_y_etapas = {
         "Tributario": ["Notificación", "Audiencia", "Resolución"]
         }
 
-# # Función para verificar el inicio de sesión
-# def verificar_login():
-#     usuario = entry_usuario.get()
-#     contraseña = entry_contraseña.get()
-    
-#     if usuario == "abogado" and contraseña == "1234":
-#         login_frame.pack_forget()
-#         main_frame.pack(fill="both", expand=True)
-#         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
-#     else:
-#         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
-
-#Funcion para verificar al usuario de ingreso
-
+# Función para verificar el inicio de sesión
 def verificar_login():
     usuario = entry_usuario.get()
     contraseña = entry_contraseña.get()
     
-    if loginConection.connect_to_database(usuario,contraseña):
-        connection = dbc.create_connection(usuario, contraseña)
+    if usuario == "abogado" and contraseña == "1234":
         login_frame.pack_forget()
         main_frame.pack(fill="both", expand=True)
         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
     else:
         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
 
+#Funcion para verificar al usuario de ingreso
+
+# def verificar_login():
+#     usuario = entry_usuario.get()
+#     contraseña = entry_contraseña.get()
+    
+#     if loginConection.connect_to_database(usuario,contraseña):
+#         connection = dbc.create_connection(usuario, contraseña)
+#         login_frame.pack_forget()
+#         main_frame.pack(fill="both", expand=True)
+#         #cargar_datos_en_tabla()  # Cargar los casos en la tabla después del login exitoso
+#     else:
+#         messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+
 def agregar_demanda():
 
     global cliente_id
+
     def agregar_cliente():
+
         def guardar_cliente():
                 global cliente_id
                 tipo_cliente = tipo_cliente_var.get()
@@ -243,24 +245,6 @@ def agregar_demanda():
     btn_agregar_contrato.grid(row=0, column=2, padx=10)
     btn_guardar_caso.grid(row=0, column=3, padx=10)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Crear ventana principal
 root = tk.Tk()
 root.title("Estudio Jurídico")
@@ -318,7 +302,7 @@ tabla_casos.column("monto", width=100)
 tabla_casos.pack(fill="both", expand=True)
 
 # Botones para agregar, editar, borrar casos
-tk.Button(main_frame, text="Agregar Caso").pack(side="left", padx=10)
+tk.Button(main_frame, text="Agregar Caso",command=agregar_demanda).pack(side="left", padx=10)
 tk.Button(main_frame, text="Editar Caso", command=lambda: print("Editar caso")).pack(side="left", padx=10)
 tk.Button(main_frame, text="Borrar Caso", command=lambda: print("Borrar caso")).pack(side="left", padx=10)
 
