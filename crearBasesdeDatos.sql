@@ -16,6 +16,7 @@ CREATE TABLE contrato (
     codigoContrato INT AUTO_INCREMENT PRIMARY KEY,
     estadoGeneral VARCHAR(255),
     descripcion TEXT
+    test TEXT
     
 );
 
